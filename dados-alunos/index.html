@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sponte – Ficha Completa do Aluno</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg:#f6f7fb; --fg:#1f2937; --card:#fff; --muted:#6b7280; --brand:#2563eb; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:var(--fg); }
+    header { padding:24px; text-align:center; }
+    h1 { margin:0 0 6px; font-size: 26px; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 16px 48px; }
+    .card { background:var(--card); border-radius:16px; box-shadow: 0 6px 18px rgba(0,0,0,.06); padding:20px; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+    .row-3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px; }
+    .row-4 { display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; }
+    @media (max-width: 900px) { .row, .row-3, .row-4 { grid-template-columns: 1fr; } }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    input, select, button { width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; background:#fff; }
+    button { background:var(--brand); color:#fff; font-weight:600; cursor:pointer; border:none; }
+    button.ghost { background:#eef2ff; color:#1d4ed8; }
+    .stack { display:grid; gap:10px; }
+    .list { margin:0; padding:0; list-style:none; }
+    .list li { padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; background:#fff; }
+    .tag { font: 12px/1.2 mono, ui-monospace, SFMono-Regular, Menlo, Consolas; background:#f1f5f9; border-radius:6px; padding:2px 6px; }
+    .grid { display:grid; grid-template-columns: 1fr 2fr; gap:12px; }
+    .muted { color:var(--muted); }
+    .divider { height:1px; background:#e5e7eb; margin:14px 0; }
+    .pair { display:flex; gap:8px; align-items:center; }
+    .nowrap { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .warn { background:#fff7ed; border:1px solid #fed7aa; color:#9a3412; padding:10px 12px; border-radius:10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Consulta de Alunos – Sponte</h1>
+    <div class="muted">Exemplo com todos os campos da ficha do aluno (SenhaPortal mascarada por padrão).</div>
+  </header>
+
+  <div class="container stack">
+    <!-- Controles -->
+    <div class="card stack">
+      <div class="row">
+        <div>
+          <label>Filtrar por nome (opcional)</label>
+          <input id="busca-nome" placeholder="Ex.: Maria" />
+        </div>
+        <div class="row" style="align-items:end;">
+          <button id="btn-carregar">🔄 Carregar</button>
+          <button id="btn-limpar" class="ghost">Limpar</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Selecione um aluno</label>
+          <select id="aluno-select">
+            <option value="">-- selecione --</option>
+          </select>
+        </div>
+        <div class="stack">
+          <label>&nbsp;</label>
+          <div class="warn">Dica: “Carregar” com o campo de nome vazio faz <span class="tag">Nome=</span> (traz todos).</div>
+        </div>
+      </div>
+
+      <div id="status" class="muted"></div>
+    </div>
+
+    <!-- Ficha -->
+    <div class="card stack">
+      <h2 style="margin:0;">Ficha do Aluno</h2>
+      <div class="divider"></div>
+
+      <div id="sem-dados" class="muted">Nenhum aluno selecionado.</div>
+
+      <div id="ficha" style="display:none;" class="stack">
+        <div class="row">
+          <div>
+            <label>Nome</label>
+            <div id="f_nome" class="nowrap"></div>
+          </div>
+          <div>
+            <label>Situação</label>
+            <div id="f_situacao"></div>
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label>AlunoID</label>
+            <div id="f_alunoId" class="tag"></div>
+          </div>
+          <div>
+            <label>RA</label>
+            <div id="f_ra" class="tag"></div>
+          </div>
+          <div>
+            <label>Nº Matrícula</label>
+            <div id="f_numMatricula" class="tag"></div>
+          </div>
+        </div>
+
+        <div class="row-4">
+          <div>
+            <label>CPF</label>
+            <div id="f_cpf" class="tag"></div>
+          </div>
+          <div>
+            <label>RG</label>
+            <div id="f_rg" class="tag"></div>
+          </div>
+          <div>
+            <label>Sexo</label>
+            <div id="f_sexo"></div>
+          </div>
+          <div>
+            <label>Data de Nascimento</label>
+            <div id="f_dn"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Email</label>
+            <div id="f_email"></div>
+          </div>
+          <div>
+            <label>Login do Portal</label>
+            <div id="f_login" class="tag"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Senha do Portal</label>
+            <div class="pair">
+              <span id="f_senha" class="tag"></span>
+              <button id="btn-toggle-senha" class="ghost" style="width:auto;">Mostrar</button>
+            </div>
+          </div>
+          <div>
+            <label>Inadimplente</label>
+            <div id="f_inad"></div>
+          </div>
+        </div>
+
+        <div class="row-4">
+          <div>
+            <label>CEP</label>
+            <div id="f_cep" class="tag"></div>
+          </div>
+          <div>
+            <label>Cidade</label>
+            <div id="f_cidade"></div>
+          </div>
+          <div>
+            <label>Bairro</label>
+            <div id="f_bairro"></div>
+          </div>
+          <div>
+            <label>Complemento</label>
+            <div id="f_complemento"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Endereço</label>
+            <div id="f_endereco" class="nowrap"></div>
+          </div>
+          <div>
+            <label>Número</label>
+            <div id="f_numero" class="tag"></div>
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label>Telefone</label>
+            <div id="f_tel"></div>
+          </div>
+          <div>
+            <label>Celular</label>
+            <div id="f_cel"></div>
+          </div>
+          <div>
+            <label>Turma Atual</label>
+            <div id="f_turmaAtual"></div>
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label>Origem</label>
+            <div id="f_origem" class="tag"></div>
+          </div>
+          <div>
+            <label>Nacionalidade</label>
+            <div id="f_nacionalidade"></div>
+          </div>
+          <div>
+            <label>Cidade Natal</label>
+            <div id="f_cidadeNatal"></div>
+          </div>
+        </div>
+
+        <div>
+          <label>Observação</label>
+          <div id="f_obs"></div>
+        </div>
+
+        <div class="divider"></div>
+        <h3 style="margin:0;">Responsáveis</h3>
+        <ul id="responsaveis" class="list"></ul>
+      </div>
+    </div>
+
+    <!-- Lista bruta (opcional) -->
+    <div class="card stack">
+      <h3 style="margin:0;">Alunos carregados</h3>
+      <ul id="lista-alunos" class="list"></ul>
+    </div>
+  </div>
+
+  <script>
+    // ==== CONFIG – substitua pelos seus dados ====
+    const CODIGO_CLIENTE = 70293;
+    const TOKEN_API = "YF0ipnJjeIxd";
+
+    // ==== Helpers de XML ====
+    const ns = "http://api.sponteeducacional.net.br/";
+    const q = (el, tag) => el.getElementsByTagName(tag)[0] || el.getElementsByTagNameNS(ns, tag)[0];
+    const qt = (el, tag) => {
+      const node = q(el, tag);
+      return node ? (node.textContent || "").trim() : "";
+    };
+    const qAll = (el, tag) => Array.from(el.getElementsByTagName(tag)).length
+      ? Array.from(el.getElementsByTagName(tag))
+      : Array.from(el.getElementsByTagNameNS(ns, tag));
+
+    // mascara senha
+    const mask = (s) => s ? "•".repeat(Math.min(8, s.length)) : "";
+
+    // ==== Parser de um wsAluno em objeto JS com TODOS os campos pedidos ====
+    function parseAluno(node) {
+      // Responsáveis
+      const respWrapper = q(node, "Responsaveis");
+      const respList = respWrapper ? qAll(respWrapper, "wsResponsaveis").map(r => ({
+        ResponsavelID: qt(r, "ResponsavelID"),
+        Nome: qt(r, "Nome"),
+        Parentesco: qt(r, "Parentesco"),
+      })) : [];
+
+      return {
+        RetornoOperacao: qt(node, "RetornoOperacao"),
+        AlunoID: qt(node, "AlunoID"),
+        Nome: qt(node, "Nome"),
+        CPF: qt(node, "CPF"),
+        RG: qt(node, "RG"),
+        Midia: qt(node, "Midia"),
+        DataNascimento: qt(node, "DataNascimento"),
+        CEP: qt(node, "CEP"),
+        Endereco: qt(node, "Endereco"),
+        NumeroEndereco: qt(node, "NumeroEndereco"),
+        ComplementoEndereco: qt(node, "ComplementoEndereco"),
+        Email: qt(node, "Email"),
+        DataCadastro: qt(node, "DataCadastro"),
+        RA: qt(node, "RA"),
+        LoginPortal: qt(node, "LoginPortal"),
+        SenhaPortal: qt(node, "SenhaPortal"),
+        Observacao: qt(node, "Observacao"),
+        Telefone: qt(node, "Telefone"),
+        Celular: qt(node, "Celular"),
+        TurmaAtual: qt(node, "TurmaAtual"),
+        ResponsavelFinanceiroID: qt(node, "ResponsavelFinanceiroID"),
+        ResponsavelDidaticoID: qt(node, "ResponsavelDidaticoID"),
+        NumeroMatricula: qt(node, "NumeroMatricula"),
+        Sexo: qt(node, "Sexo"),
+        Situacao: qt(node, "Situacao"),
+        Cidade: qt(node, "Cidade"),
+        Bairro: qt(node, "Bairro"),
+        CidadeNatal: qt(node, "CidadeNatal"),
+        Inadimplente: qt(node, "Inadimplente"),
+        Origem: qt(node, "Origem"),
+        NomeOrigem: qt(node, "NomeOrigem"),
+        CursoInteresse: qt(node, "CursoInteresse"),
+        InfoBloqueada: qt(node, "InfoBloqueada"),
+        Nacionalidade: qt(node, "Nacionalidade"),
+        Classificacao: qt(node, "Classificacao"),
+        Responsaveis: respList,
+      };
+    }
+
+    // ==== Chamada ao GetAlunos ====
+    async function getAlunos(prefixoNome="") {
+      const sParametrosBusca = `Nome=${prefixoNome}`;
+      const url = `https://api.sponteeducacional.net.br/WSAPIEdu.asmx/GetAlunos` +
+        `?nCodigoCliente=${encodeURIComponent(CODIGO_CLIENTE)}` +
+        `&sToken=${encodeURIComponent(TOKEN_API)}` +
+        `&sParametrosBusca=${encodeURIComponent(sParametrosBusca)}`;
+
+      const xml = await fetchXML(url);
+      const nodes = Array.from(xml.getElementsByTagName("wsAluno")).length
+        ? Array.from(xml.getElementsByTagName("wsAluno"))
+        : Array.from(xml.getElementsByTagNameNS(ns, "wsAluno"));
+
+      return nodes.map(parseAluno);
+    }
+
+    function fetchXML(url) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = "document";
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200 && xhr.responseXML) resolve(xhr.responseXML);
+            else reject(new Error(`Erro ${xhr.status} ao consultar API.`));
+          }
+        };
+        xhr.onerror = () => reject(new Error("Erro de rede"));
+        xhr.send();
+      });
+    }
+
+    // ==== UI ====
+    const $ = (id) => document.getElementById(id);
+    const alunoSelect = $("aluno-select");
+    const listaAlunos = $("lista-alunos");
+    const status = $("status");
+    const semDados = $("sem-dados");
+    const ficha = $("ficha");
+
+    // campos da ficha
+    const F = {
+      nome: $("f_nome"),
+      situacao: $("f_situacao"),
+      alunoId: $("f_alunoId"),
+      ra: $("f_ra"),
+      numMatricula: $("f_numMatricula"),
+      cpf: $("f_cpf"),
+      rg: $("f_rg"),
+      sexo: $("f_sexo"),
+      dn: $("f_dn"),
+      email: $("f_email"),
+      login: $("f_login"),
+      senha: $("f_senha"),
+      cep: $("f_cep"),
+      cidade: $("f_cidade"),
+      bairro: $("f_bairro"),
+      complemento: $("f_complemento"),
+      endereco: $("f_endereco"),
+      numero: $("f_numero"),
+      tel: $("f_tel"),
+      cel: $("f_cel"),
+      turmaAtual: $("f_turmaAtual"),
+      inad: $("f_inad"),
+      origem: $("f_origem"),
+      nacionalidade: $("f_nacionalidade"),
+      cidadeNatal: $("f_cidadeNatal"),
+      obs: $("f_obs"),
+      respList: $("responsaveis"),
+    };
+
+    let alunosCache = [];
+    let senhaVisivel = false;
+
+    $("btn-carregar").addEventListener("click", async () => {
+      const termo = ($("busca-nome").value || "").trim();
+      status.textContent = "Carregando...";
+      try {
+        alunosCache = await getAlunos(termo);
+        renderLista(alunosCache);
+        renderSelect(alunosCache);
+        status.textContent = `Carregados: ${alunosCache.length}`;
+      } catch (e) {
+        console.error(e);
+        status.textContent = "Falha ao carregar.";
+      }
+    });
+
+    $("btn-limpar").addEventListener("click", () => {
+      $("busca-nome").value = "";
+      alunoSelect.innerHTML = '<option value="">-- selecione --</option>';
+      listaAlunos.innerHTML = "";
+      status.textContent = "";
+      semDados.style.display = "";
+      ficha.style.display = "none";
+    });
+
+    alunoSelect.addEventListener("change", () => {
+      const id = alunoSelect.value;
+      const a = alunosCache.find(x => x.AlunoID === id);
+      if (a) renderFicha(a);
+    });
+
+    $("btn-toggle-senha").addEventListener("click", () => {
+      senhaVisivel = !senhaVisivel;
+      $("btn-toggle-senha").textContent = senhaVisivel ? "Ocultar" : "Mostrar";
+      const a = alunosCache.find(x => x.AlunoID === alunoSelect.value);
+      if (a) F.senha.textContent = senhaVisivel ? a.SenhaPortal : mask(a.SenhaPortal);
+    });
+
+    function renderSelect(alunos) {
+      alunoSelect.innerHTML = '<option value="">-- selecione --</option>';
+      alunos.forEach(a => {
+        const opt = document.createElement("option");
+        opt.value = a.AlunoID;
+        opt.textContent = a.Nome || `(ID ${a.AlunoID})`;
+        alunoSelect.appendChild(opt);
+      });
+    }
+
+    function renderLista(alunos) {
+      listaAlunos.innerHTML = "";
+      alunos.forEach(a => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${a.Nome || "(sem nome)"}</strong><br><span class="muted">ID:</span> <span class="tag">${a.AlunoID}</span> — <span class="muted">Situação:</span> ${a.Situacao || "-"}`;
+        listaAlunos.appendChild(li);
+      });
+    }
+
+    function renderFicha(a) {
+      semDados.style.display = "none";
+      ficha.style.display = "";
+
+      F.nome.textContent = a.Nome || "";
+      F.situacao.textContent = a.Situacao || "";
+      F.alunoId.textContent = a.AlunoID || "";
+      F.ra.textContent = a.RA || "";
+      F.numMatricula.textContent = a.NumeroMatricula || "";
+      F.cpf.textContent = a.CPF || "";
+      F.rg.textContent = a.RG || "";
+      F.sexo.textContent = a.Sexo || "";
+      F.dn.textContent = a.DataNascimento || "";
+      F.email.textContent = a.Email || "";
+      F.login.textContent = a.LoginPortal || "";
+      F.senha.textContent = senhaVisivel ? a.SenhaPortal : mask(a.SenhaPortal || "");
+      F.cep.textContent = a.CEP || "";
+      F.cidade.textContent = a.Cidade || "";
+      F.bairro.textContent = a.Bairro || "";
+      F.complemento.textContent = a.ComplementoEndereco || "";
+      F.endereco.textContent = a.Endereco || "";
+      F.numero.textContent = a.NumeroEndereco || "";
+      F.tel.textContent = a.Telefone || "";
+      F.cel.textContent = a.Celular || "";
+      F.turmaAtual.textContent = a.TurmaAtual || "";
+      F.inad.textContent = a.Inadimplente || "";
+      F.origem.textContent = a.Origem || "";
+      F.nacionalidade.textContent = a.Nacionalidade || "";
+      F.cidadeNatal.textContent = a.CidadeNatal || "";
+      F.obs.textContent = a.Observacao || "";
+
+      // Responsáveis
+      F.respList.innerHTML = "";
+      (a.Responsaveis || []).forEach(r => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div class="grid">
+            <div class="muted">Responsável</div><div><strong>${r.Nome || "-"}</strong></div>
+            <div class="muted">Parentesco</div><div>${r.Parentesco || "-"}</div>
+            <div class="muted">ID</div><div class="tag">${r.ResponsavelID || "-"}</div>
+          </div>
+        `;
+        F.respList.appendChild(li);
+      });
+      if ((a.Responsaveis || []).length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "Sem responsáveis cadastrados.";
+        F.respList.appendChild(li);
+      }
+    }
+
+    // (Opcional) carregue automaticamente todos ao abrir:
+    // document.getElementById("btn-carregar").click();
+  </script>
+</body>
+</html>

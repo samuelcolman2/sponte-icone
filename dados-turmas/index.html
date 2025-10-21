@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Sponte – Turmas Abertas + Alunos (texto branco)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#e6e9ec;       /* fundo escuro */
+      --card:#FE5508;     /* fundo dos cards */
+      --muted:#ffffff;    /* cinza claro */
+      --brand:#b33d06;    /* azul padrão */
+      --panel-h: 560px;   /* altura dos cards */
+      --alunos-max-h: 520px; /* altura limite alunos */
+      --text:#ffffff;     /* texto branco */
+    }
+    *{box-sizing:border-box;color:var(--text)}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+    }
+    header{padding:24px;text-align:center}
+    h1{margin:0 0 6px;color:var(--text)}
+    .container{max-width:1200px;margin:0 auto;padding:0 16px 48px}
+    .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media (max-width:1000px){.cols{grid-template-columns:1fr}}
+    .card{
+      background:var(--card);
+      border-radius:16px;
+      box-shadow:0 6px 18px rgba(0,0,0,.3);
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      min-height:var(--panel-h);
+    }
+    .muted{color:var(--muted)}
+    table{width:100%;border-collapse:collapse}
+    th,td{
+      padding:10px;
+      border-bottom:1px solid #2d333b;
+      text-align:left;
+      font-size:14px;
+      vertical-align:top;
+      color:var(--text);
+    }
+    button{
+      padding:8px 12px;
+      border:0;
+      border-radius:10px;
+      background:var(--brand);
+      color:#fff;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .tag{
+      font:12px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      background:#1f2937;
+      border-radius:6px;
+      padding:2px 6px;
+      color:var(--text);
+    }
+    .scroll { flex:1; overflow:auto; margin-top:12px; }
+    .alunos-scroll {
+      margin-top:12px;
+      max-height: var(--alunos-max-h);
+      overflow: auto;
+      border-top: 1px solid #2d333b;
+    }
+  </style>
+</head>
+<body>
+  <header>
+  </header>
+
+  <div class="container cols">
+    <!-- TURMAS -->
+    <div class="card">
+      <div>
+        <h3 style="margin:0">Turmas</h3>
+        <div id="statusTurmas" class="muted">Carregando turmas abertas...</div>
+      </div>
+      <div class="scroll">
+        <table id="tblTurmas" style="display:none">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Turno</th>
+              <th>AnoLetivo</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyTurmas"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ALUNOS -->
+    <div class="card">
+      <div>
+        <h3 style="margin:0">Alunos da Turma</h3>
+        <div id="statusAlunos" class="muted">Selecione uma turma.</div>
+      </div>
+      <div class="alunos-scroll">
+        <table id="tblAlunos" style="display:none">
+          <thead>
+            <tr>
+              <th>Nome</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyAlunos"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CODIGO_CLIENTE = 70293;
+    const TOKEN_API = "YF0ipnJjeIxd";
+    const DEFAULT_MODULO = 1;
+    const OPTIONAL_ANO_LETIVO = "2025";
+    const ns = "http://api.sponteeducacional.net.br/";
+
+    const q = (el, tag) => el.getElementsByTagName(tag)[0] || el.getElementsByTagNameNS(ns, tag)[0];
+    const qt = (el, tag) => { const n = q(el, tag); return n ? (n.textContent || "").trim() : ""; };
+    const qAll = (el, tag) => {
+      const a = Array.from(el.getElementsByTagName(tag));
+      return a.length ? a : Array.from(el.getElementsByTagNameNS(ns, tag));
+    };
+    const mapTurno = (v) => ({ "-1":"MANHÃ","-2":"TARDE","-3":"NOITE","-4":"INTEGRAL" }[v] || v || "");
+
+    function fetchXML(url){
+      return new Promise((resolve,reject)=>{
+        const xhr=new XMLHttpRequest();
+        xhr.open("GET",url,true);
+        xhr.responseType="document";
+        xhr.onreadystatechange=()=>{if(xhr.readyState===4){
+          if(xhr.status===200&&xhr.responseXML)resolve(xhr.responseXML);
+          else reject(new Error(`Erro ${xhr.status}`));
+        }};
+        xhr.onerror=()=>reject(new Error("Erro de rede"));
+        xhr.send();
+      });
+    }
+
+    async function getTurmasAbertas(){
+      const base="https://api.sponteeducacional.net.br/WSAPIEdu.asmx/GetTurmas";
+      const sParametrosBusca="Situacao=-1";
+      const url=base+`?nCodigoCliente=${CODIGO_CLIENTE}&sToken=${TOKEN_API}&sParametrosBusca=${encodeURIComponent(sParametrosBusca)}`;
+      const xml=await fetchXML(url);
+      const nodes=qAll(xml,"wsTurma");
+      return nodes.map(t=>({
+        TurmaID:qt(t,"TurmaID"),
+        Nome:qt(t,"Nome"),
+        Turno:qt(t,"Turno"),
+        AnoLetivo:qt(t,"AnoLetivo"),
+      }));
+    }
+
+    function parseIntegrantesTurma(wrapper){
+      const nomeTurma = qt(wrapper,"Nome");
+      const integrantesRoot = q(wrapper,"Integrantes") || wrapper;
+      let nodes = qAll(integrantesRoot,"wsIntegrante");
+      if(!nodes.length){
+        nodes = Array.from(integrantesRoot.children).filter(el=>q(el,"Nome"));
+      }
+      const integrantes = nodes.map(n=>({
+        Nome:qt(n,"Nome"),
+        RA:qt(n,"RA"),
+        Situacao:qt(n,"Situacao")
+      })).filter(a=>a.Nome||a.RA||a.Situacao);
+      return {nomeTurma,integrantes};
+    }
+
+    async function getIntegrantesTurma(turmaId,modulo=DEFAULT_MODULO){
+      const base="https://api.sponteeducacional.net.br/WSAPIEdu.asmx/GetIntegrantesTurmas";
+      let sParametrosBusca=`TurmaID=${turmaId};Modulo=${modulo}`;
+      if(OPTIONAL_ANO_LETIVO) sParametrosBusca+=`;AnoLetivo=${OPTIONAL_ANO_LETIVO}`;
+      const url=base+`?nCodigoCliente=${CODIGO_CLIENTE}&sToken=${TOKEN_API}&sParametrosBusca=${encodeURIComponent(sParametrosBusca)}`;
+      const xml=await fetchXML(url);
+      const wrapper=q(xml,"wsIntegrantesTurma")||xml;
+      return parseIntegrantesTurma(wrapper);
+    }
+
+    const statusTurmas=document.getElementById("statusTurmas");
+    const tblTurmas=document.getElementById("tblTurmas");
+    const tbodyTurmas=document.getElementById("tbodyTurmas");
+    const statusAlunos=document.getElementById("statusAlunos");
+    const tblAlunos=document.getElementById("tblAlunos");
+    const tbodyAlunos=document.getElementById("tbodyAlunos");
+
+    async function carregarTurmas(){
+      try{
+        const turmas=await getTurmasAbertas();
+        statusTurmas.textContent=`Encontradas ${turmas.length} turmas abertas.`;
+        tblTurmas.style.display="";
+        tbodyTurmas.innerHTML=turmas.map(t=>`
+          <tr>
+            <td>${t.Nome||""}</td>
+            <td>${mapTurno(t.Turno)}</td>
+            <td>${t.AnoLetivo||""}</td>
+            <td><button class="ver-alunos" data-turma="${t.TurmaID}">Ver alunos</button></td>
+          </tr>`).join("");
+      }catch(e){statusTurmas.textContent="Erro ao carregar turmas abertas.";}
+    }
+
+    async function carregarAlunosDaTurma(turmaId){
+      statusAlunos.textContent=`Carregando alunos da turma ${turmaId}...`;
+      tblAlunos.style.display="none";
+      tbodyAlunos.innerHTML="";
+      try{
+        const { nomeTurma, integrantes } = await getIntegrantesTurma(turmaId);
+        statusAlunos.textContent=`Turma ${turmaId}${nomeTurma?" – "+nomeTurma:""}: ${integrantes.length} aluno(s) encontrado(s).`;
+        tblAlunos.style.display="";
+        tbodyAlunos.innerHTML=integrantes.map(a=>`
+          <tr><td>${a.Nome||""}</td><td>${a.RA||""}</td><td>${a.Situacao||""}</td></tr>`).join("");
+      }catch(e){statusAlunos.textContent=`Erro ao carregar alunos da turma ${turmaId}.`;}
+    }
+
+    document.addEventListener("click",async ev=>{
+      const btn=ev.target.closest("button.ver-alunos");
+      if(!btn)return;
+      await carregarAlunosDaTurma(btn.getAttribute("data-turma"));
+    });
+
+    carregarTurmas();
+  </script>
+</body>
+</html>
