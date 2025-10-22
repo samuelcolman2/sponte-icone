@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <title>Ícone</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
@@ -12,7 +13,7 @@
   <!-- Tailwind para estilizar a NAVBAR -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
+  <style>
   :root{
     --bg:#ffffff;
     --card:#ffffff;
@@ -24,8 +25,7 @@
     --border:#a5acb9;
     --danger:#dc2626;
     --danger-hover:#b91c1c;
-}
-
+  }
 
   *{ box-sizing:border-box; color:var(--text); }
   body{
@@ -62,7 +62,7 @@
   a{ color:inherit; text-decoration:none }
   a:hover{ color:var(--brand) }
 
-  button{ padding:10px 12px; border-radius:10px; background:var(--brand); color:#fff; cursor:pointer; font-weight:600; border:1px solid var(--brand); transition:all .2s ease; }
+  button{ padding:10px 12px; border-radius:10px; background:var(--brand); color:#fff; cursor:pointer; font-weight:600; border:1px solid var(--brand); transition:all .2s ease; min-height:44px; }
   button:hover{ transform:scale(1.05); background:var(--brand); color:#fff; border-color:var(--brand); }
 
   button.ver-alunos{ padding:5px 5px; font-size:15px; background-color:var(--brand); color:#fff; border:1px solid var(--brand); border-radius:10px; cursor:pointer; font-weight:600; transition:all .2s ease; }
@@ -71,7 +71,7 @@
   .select{
     appearance:none; -webkit-appearance:none; -moz-appearance:none;
     display:inline-block; background:var(--brand); color:#fff;
-    border-radius:15px; padding:5px 14px; border:1px solid var(--brand);
+    border-radius:15px; padding:8px 14px; border:1px solid var(--brand);
     font-weight:600; cursor:pointer; transition:all .2s ease;
   }
   .select:hover,.select:focus{ transform:scale(1.05); background:var(--brand); color:#fff; border-color:var(--brand); outline:none; }
@@ -115,10 +115,10 @@
 
   /* ===== PERFIL BOX (ficha do aluno) ===== */
   #modalFicha .modal-body{
-  overflow: hidden;                 /* remove a barra externa */
-  display: grid;
-  grid-template-rows: 1fr;          /* ocupa toda a altura disponível */
-}
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 1fr;
+  }
   .perfil-card{
     width:min(560px, 92vw);
     margin:0 auto;
@@ -130,98 +130,114 @@
     grid-template-rows:auto 1fr;
     height: 100%;
     max-height: none;
-    overflow:hidden;                
+    overflow:hidden;
   }
-  .perfil-top{
-    padding:24px 24px 12px;
-    text-align:center;
-    position:relative;
-  }
-  .perfil-avatar{
-    width:96px; height:96px; border-radius:50%;
-    display:inline-grid; place-items:center;
-    background:#e5e7eb; color:#374151; font-weight:800;
-    border:4px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,.08);
-    object-fit:cover;
-  }
+  .perfil-top{ padding:24px 24px 12px; text-align:center; position:relative; }
+  .perfil-avatar{ width:96px; height:96px; border-radius:50%; display:inline-grid; place-items:center; background:#e5e7eb; color:#374151; font-weight:800; border:4px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,.08); object-fit:cover; }
   .perfil-nome{ margin:10px 0 4px; font-size:24px; font-weight:900; }
   .perfil-sub{ color:var(--muted); font-size:14px; }
-  .perfil-scroll{
-    padding:16px 20px 24px;
-    overflow:auto;                  /* rolagem interna do conteúdo */
-    min-height: 0;
-  }
+  .perfil-scroll{ padding:16px 20px 24px; overflow:auto; min-height: 0; }
   .campo{ margin:12px 0 0 }
   .campo label{ display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
   .valor{ font-weight:700; }
   .responsavel{ padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; margin-top:8px; }
 
   /*Deixar a cor do nome do aluno laranja também*/
-  #modalAlunos #tblAlunos tbody tr:hover td{
-  color: var(--brand);
-  background: #ffffff;
-}
-#modalAlunos .aluno-cell span{
-  transition: color .15s ease;
-  cursor: pointer; /* redundante, mas explícito para o nome */
-}
-#modalAlunos .aluno-cell span:hover{
-  color: var(--brand);
-}
-#modalAlunos .aluno-cell:hover .aluno-foto{
-  border-color: var(--brand);
-}
+  #modalAlunos #tblAlunos tbody tr:hover td{ color: var(--brand); background: #ffffff; }
+  #modalAlunos .aluno-cell span{ transition: color .15s ease; cursor: pointer; }
+  #modalAlunos .aluno-cell span:hover{ color: var(--brand); }
+  #modalAlunos .aluno-cell:hover .aluno-foto{ border-color: var(--brand); }
 
-/*Botão de fechar*/
-/* Padrão para botões de fechar (classe já usada no HTML) */
-button.btn-icon{
-  background: var(--danger) !important;
-  color: #fff !important;
-  border: 1px solid var(--danger) !important;
-  font-weight: 900;
-  line-height: 1;
-  padding: 8px 12px;
-  border-radius: 10px;
-}
-button.btn-icon:hover,
-button.btn-icon:focus{
-  background: var(--danger-hover) !important;
-  border-color: var(--danger-hover) !important;
-  color:#fff !important;
-  transform: scale(1.05);
-  outline: none;
-}
+  /*Botão de fechar*/
+  button.btn-icon{ background: var(--danger) !important; color: #fff !important; border: 1px solid var(--danger) !important; font-weight: 900; line-height: 1; padding: 8px 12px; border-radius: 10px; }
+  button.btn-icon:hover, button.btn-icon:focus{ background: var(--danger-hover) !important; border-color: var(--danger-hover) !important; color:#fff !important; transform: scale(1.05); outline: none; }
+  button[aria-label="Fechar"], button[aria-label="fechar"], button[title~="Fechar"], button[title~="fechar"]{ background: var(--danger) !important; color:#fff !important; border:1px solid var(--danger) !important; }
+  button[aria-label="Fechar"]:hover, button[aria-label="fechar"]:hover, button[title~="Fechar"]:hover, button[title~="fechar"]:hover{ background: var(--danger-hover) !important; border-color: var(--danger-hover) !important; color:#fff !important; }
+  .btn-icon > *, button[aria-label="Fechar"] > *, button[title~="Fechar"] > *{ color:#fff !important; fill:#fff !important; stroke:#fff !important; }
 
-/* Caso existam outros botões de fechar sem a classe (por segurança) */
-button[aria-label="Fechar"],
-button[aria-label="fechar"],
-button[title~="Fechar"],
-button[title~="fechar"]{
-  background: var(--danger) !important;
-  color:#fff !important;
-  border:1px solid var(--danger) !important;
-}
-button[aria-label="Fechar"]:hover,
-button[aria-label="fechar"]:hover,
-button[title~="Fechar"]:hover,
-button[title~="fechar"]:hover{
-  background: var(--danger-hover) !important;
-  border-color: var(--danger-hover) !important;
-  color:#fff !important;
-}
+  /* ========================= */
+  /*        MOBILE FIXES       */
+  /* ========================= */
+  @media (max-width: 1024px){
+    :root{ --panel-h:auto; }
+    .card{ height:auto; padding:16px; }
+  }
 
-/* Se o "✕" for um span/svg dentro do botão, garante branco */
-.btn-icon > *,
-button[aria-label="Fechar"] > *,
-button[title~="Fechar"] > *{
-  color:#fff !important;
-  fill:#fff !important;
-  stroke:#fff !important;
-}
-</style>
+  /* Mobile: até tablets pequenos */
+  @media (max-width: 768px){
+    header{ padding:12px; }
+    .container{ padding:0 12px 28px; }
+    .control-row{ gap:10px; }
+
+    /* NAV altura mais compacta sem alterar Tailwind no HTML */
+    nav .max-w-7xl > .flex{ height:4.5rem; }
+
+    .kpi-grid{ gap:12px; }
+    .kpi-number{ font-size:28px; }
+    .kpi-label{ font-size:13px; }
+
+    th,td{ padding:8px; font-size:14px; }
+    .aluno-foto{ width:32px; height:32px; }
+
+    /* Cards e áreas de rolagem mais curtas para caber no viewport */
+    .scroll, .alunos-scroll{ max-height:60dvh; }
+
+    /* Modal vira "fullscreen" amigável no mobile */
+    .modal{ padding:0; }
+    .modal-dialog{ width:100vw; height:100dvh; max-height:100dvh; border-radius:0; }
+    .modal-header{ position:sticky; top:0; background:var(--card); z-index:2; }
+    #modalAlunos .modal-body, #modalFicha .modal-body{ padding:0 0 8px; }
+    .alunos-scroll{ height:calc(100dvh - 64px); }
+
+    /* Perfil box ocupa toda a tela no mobile */
+    .perfil-card{ width:100%; height:100%; max-height:100%; border-radius:0; }
+    .perfil-top{ padding:16px 16px 8px; }
+    .perfil-avatar{ width:80px; height:80px; }
+    .perfil-nome{ font-size:20px; }
+    .perfil-sub{ font-size:13px; }
+
+    /* Botão "ver alunos" ocupa a largura para facilitar o toque */
+    button.ver-alunos{ width:100%; padding:10px 12px; font-size:16px; }
+
+    /* Seletores mais "touch-friendly" */
+    .select{ padding:10px 16px; border-radius:12px; }
+    .arrow-down{ right:12px; }
+
+    /* Evita quebra feia de KPI subtitle */
+    #kpiLabelTurma{ max-width:70vw; }
+  }
+
+  /* Mobile pequeno: esconde colunas menos críticas e ajusta tipografia */
+  @media (max-width: 480px){
+    h3{ font-size:18px; }
+    .tag{ font-size:11px; padding:1px 6px; }
+
+    /* TURMAS: esconder Turno e AnoLetivo */
+    #tblTurmas th:nth-child(2),
+    #tblTurmas td:nth-child(2),
+    #tblTurmas th:nth-child(3),
+    #tblTurmas td:nth-child(3){ display:none; }
+
+    /* ALUNOS: esconder RA e Situação */
+    #tblAlunos th:nth-child(2),
+    #tblAlunos td:nth-child(2),
+    #tblAlunos th:nth-child(3),
+    #tblAlunos td:nth-child(3){ display:none; }
+
+    /* reduz ainda mais paddings */
+    th,td{ padding:8px 6px; font-size:13px; }
+  }
+
+  /* iOS Safari barra dinâmica */
+  @supports (height: 100svh){
+    @media (max-width: 768px){
+      .modal-dialog{ height:100svh; max-height:100svh; }
+      .alunos-scroll{ height:calc(100svh - 64px); }
+    }
+  }
+  </style>
 </head>
 <body>
-
   <!-- NAVBAR -->
   <nav class="sticky top-0 z-50 bg-white border-b-[3px] border-[#FD7F08]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -232,7 +248,6 @@ button[title~="Fechar"] > *{
                  onerror="this.onerror=null;this.src='https://placehold.co/150x50/eeeeee/333333?text=Logo';">
           </a>
         </div>
-
         <!-- Seletor de unidade -->
         <div class="control-row">
           <label for="selUnidade">Unidade:</label>
@@ -256,7 +271,7 @@ button[title~="Fechar"] > *{
     <div class="card">
       <div class="control-row" style="justify-content:space-between">
         <h3 style="margin:0">Turmas</h3>
-        <div id="statusTurmas" class="muted">Carregando turmas abertas...</div>
+        <!-- removido statusTurmas -->
       </div>
       <div class="scroll">
         <table id="tblTurmas" style="display:none">
@@ -268,7 +283,7 @@ button[title~="Fechar"] > *{
               <th>Ação</th>
             </tr>
           </thead>
-            <tbody id="tbodyTurmas"></tbody>
+          <tbody id="tbodyTurmas"></tbody>
         </table>
       </div>
     </div>
@@ -305,14 +320,14 @@ button[title~="Fechar"] > *{
       <div class="modal-header">
         <h3 id="modalAlunosTitulo" style="margin:0">Alunos da Turma</h3>
         <div class="control-row">
-          <div id="statusAlunos" class="muted">Selecione uma turma.</div>
+          <!-- removido statusAlunos -->
           <button id="btnFecharModal" class="btn-icon" aria-label="Fechar">✕</button>
         </div>
       </div>
       <div class="modal-body">
         <div class="alunos-scroll">
           <table id="tblAlunos" style="display:none">
-            <thead><tr><th>Nome</th></tr></thead>
+            <thead><tr><th>Nome</th><th>RA</th><th>Situação</th></tr></thead>
             <tbody id="tbodyAlunos"></tbody>
           </table>
         </div>
@@ -326,7 +341,7 @@ button[title~="Fechar"] > *{
       <div class="modal-header">
         <h3 id="modalFichaTitulo" style="margin:0">Ficha do Aluno</h3>
         <div class="control-row">
-          <div id="statusFicha" class="muted">Selecione um aluno.</div>
+          <!-- removido statusFicha -->
           <button id="btnFecharFicha" class="btn-icon" aria-label="Fechar">✕</button>
         </div>
       </div>
@@ -337,33 +352,27 @@ button[title~="Fechar"] > *{
             <div id="fx_nome" class="perfil-nome">—</div>
             <div id="fx_sub" class="perfil-sub">—</div>
           </div>
-
           <div class="perfil-scroll">
             <div class="campo">
               <label>Gênero</label>
               <div id="fx_sexo" class="valor">—</div>
             </div>
-
             <div class="campo">
               <label>CPF</label>
               <div id="fx_cpf" class="valor">—</div>
             </div>
-
             <div class="campo">
               <label>Login do Portal</label>
               <div id="fx_login" class="valor">—</div>
             </div>
-
             <div class="campo">
               <label>Senha do Portal</label>
-              <div id="fx_senha" class="valor">—</div> <!-- exibida direto -->
+              <div id="fx_senha" class="valor">—</div>
             </div>
-
             <div class="campo">
               <label>Endereço</label>
               <div id="fx_endereco" class="valor">—</div>
             </div>
-
             <div class="campo">
               <label>Responsáveis</label>
               <div id="fx_responsaveis">—</div>
@@ -520,13 +529,11 @@ button[title~="Fechar"] > *{
 
     // ---- Estado/UI ----
     const selUnidade=document.getElementById("selUnidade");
-    const statusTurmas=document.getElementById("statusTurmas");
     const tblTurmas=document.getElementById("tblTurmas");
     const tbodyTurmas=document.getElementById("tbodyTurmas");
 
     const modalAlunos = document.getElementById('modalAlunos');
     const btnFecharModal = document.getElementById('btnFecharModal');
-    const statusAlunos=document.getElementById("statusAlunos");
     const tblAlunos=document.getElementById("tblAlunos");
     const tbodyAlunos=document.getElementById("tbodyAlunos");
 
@@ -541,10 +548,13 @@ button[title~="Fechar"] > *{
     const kpiQtdAlunosTurma = document.getElementById("kpiQtdAlunosTurma");
     const kpiLabelTurma = document.getElementById("kpiLabelTurma");
 
+    // Títulos que passam a exibir o "status" contextual
+    const modalAlunosTitulo = document.getElementById('modalAlunosTitulo');
+    const modalFichaTitulo  = document.getElementById('modalFichaTitulo');
+
     // Ficha (box)
     const modalFicha = document.getElementById('modalFicha');
     const btnFecharFicha = document.getElementById('btnFecharFicha');
-    const statusFicha = document.getElementById('statusFicha');
 
     const FX = {
       avatar: document.getElementById('fx_avatar'),
@@ -561,7 +571,6 @@ button[title~="Fechar"] > *{
     function getUnidadeAtual(){ const key = selUnidade.value || "2"; return UNIDADES[key]; }
 
     function limparAlunos(){
-      statusAlunos.textContent="Selecione uma turma.";
       tblAlunos.style.display="none";
       tbodyAlunos.innerHTML="";
       kpiTurmaSelecionada.classList.add("hidden");
@@ -611,7 +620,6 @@ button[title~="Fechar"] > *{
       limparAlunos();
       const { CODIGO_CLIENTE, TOKEN_API, nome } = getUnidadeAtual();
       try{
-        statusTurmas.textContent=`Carregando turmas abertas de ${nome}...`;
         cardResumoTurmas.style.display="none";
         cardResumoAlunos.style.display="none";
         kpiTotalTurmas.textContent="—";
@@ -621,7 +629,6 @@ button[title~="Fechar"] > *{
 
         const turmas=await getTurmasAbertas(CODIGO_CLIENTE, TOKEN_API);
 
-        statusTurmas.textContent=`${nome}: ${turmas.length} turmas abertas.`;
         tblTurmas.style.display="";
         tbodyTurmas.innerHTML=turmas.map(t=>{
           const safeId = String(t.TurmaID || "").replace(/[^a-zA-Z0-9_-]/g, "");
@@ -648,7 +655,6 @@ button[title~="Fechar"] > *{
         statusResumoAlunos.textContent = "Atualizado agora";
       }catch(e){
         console.error(e);
-        statusTurmas.textContent=`Erro ao carregar turmas de ${nome}.`;
         tblTurmas.style.display="none";
         tbodyTurmas.innerHTML="";
         cardResumoTurmas.style.display="";
@@ -663,17 +669,16 @@ button[title~="Fechar"] > *{
     async function carregarAlunosDaTurma(turmaId, turmaNome){
       const { CODIGO_CLIENTE, TOKEN_API, nome } = getUnidadeAtual();
       abrirModal();
-      statusAlunos.textContent=`Carregando alunos da turma ${turmaId} (${nome})...`;
+      modalAlunosTitulo.textContent = "Carregando alunos...";
       tblAlunos.style.display="none";
       tbodyAlunos.innerHTML="";
       try{
         const { nomeTurma, integrantes } = await getIntegrantesTurma(CODIGO_CLIENTE, TOKEN_API, turmaId);
         const labelNome = (nomeTurma || turmaNome || `Turma ${turmaId}`);
-        statusAlunos.textContent=`${nome} – ${labelNome}: ${integrantes.length} aluno(s).`;
+        modalAlunosTitulo.textContent = `${nome} – ${labelNome}: ${integrantes.length} aluno(s).`;
         tblAlunos.style.display="";
         // Ordem alfabética
         integrantes.sort((a, b) => a.Nome.localeCompare(b.Nome, 'pt', { sensitivity: 'base' }));
-
 
         tbodyAlunos.innerHTML = integrantes.map(a=>{
           const id = a.AlunoID || a.RA || "";
@@ -707,7 +712,7 @@ button[title~="Fechar"] > *{
 
       }catch(e){
         console.error(e);
-        statusAlunos.textContent=`Erro ao carregar alunos da turma ${turmaId} (${nome}).`;
+        modalAlunosTitulo.textContent = `Erro ao carregar alunos da turma ${turmaId} (${nome}).`;
       }
     }
 
@@ -738,12 +743,15 @@ button[title~="Fechar"] > *{
         const nome = nomeEl ? nomeEl.textContent.trim() : '';
 
         const { CODIGO_CLIENTE, TOKEN_API } = getUnidadeAtual();
-        statusFicha.textContent = 'Carregando ficha do aluno...';
+        modalFichaTitulo.textContent = 'Carregando ficha...';
         abrirModalFicha();
 
         try{
           const a = await getAlunoDetalhes(CODIGO_CLIENTE, TOKEN_API, id, nome);
-          if(!a){ statusFicha.textContent='Não foi possível obter a ficha deste aluno.'; return; }
+          if(!a){
+            modalFichaTitulo.textContent='Ficha do Aluno';
+            return;
+          }
 
           // Cabeçalho do box
           FX.nome.textContent = a.Nome || '';
@@ -757,7 +765,7 @@ button[title~="Fechar"] > *{
           FX.sexo.textContent  = a.Sexo || '';
           FX.cpf.textContent   = a.CPF || '';
           FX.login.textContent = a.LoginPortal || '';
-          FX.senha.textContent = a.SenhaPortal || ''; // EXIBE DIRETO
+          FX.senha.textContent = a.SenhaPortal || '';
 
           const endParts = [
             a.Endereco || '',
@@ -777,10 +785,10 @@ button[title~="Fechar"] > *{
             FX.resps.innerHTML = `<div class="muted">Sem responsáveis cadastrados.</div>`;
           }
 
-          statusFicha.textContent = 'Ficha carregada';
+          modalFichaTitulo.textContent = a.Nome ? `Ficha — ${a.Nome}` : 'Ficha do Aluno';
         }catch(e){
           console.error(e);
-          statusFicha.textContent = 'Erro ao carregar a ficha.';
+          modalFichaTitulo.textContent = 'Erro ao carregar a ficha';
         }
       });
     }
