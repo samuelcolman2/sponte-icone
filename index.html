@@ -244,7 +244,7 @@
       <div class="flex items-center justify-between h-24">
         <div class="flex-shrink-0">
           <a href="#" class="flex items-center">
-            <img class="h-16 w-auto" src="/images/logo-svg.png" alt="Logo Ícone Colégio e Curso"
+            <img class="h-16 w-auto" src="images/logo-svg.png" alt="Logo Ícone Colégio e Curso"
                  onerror="this.onerror=null;this.src='https://placehold.co/150x50/eeeeee/333333?text=Logo';">
           </a>
         </div>
@@ -255,7 +255,10 @@
             <select id="selUnidade" class="select pr-8">
               <option value="1">Unidade 1</option>
               <option value="2" selected>Unidade 2</option>
+              <option value="3">Unidade 3</option>
+              <option value="4">Unidade 4</option>
               <option value="5">Unidade 5</option>
+              <option value="6">Unidade 6</option>
             </select>
             <span class="arrow-down"></span>
           </div>
@@ -384,11 +387,13 @@
   </div>
 
   <script>
-    // ==== CONFIGURAÇÃO DAS UNIDADES ====
     const UNIDADES = {
-      "1": { nome: "Unidade 1", CODIGO_CLIENTE: 18935, TOKEN_API: "YF0ipnJjeIxd" },
-      "2": { nome: "Unidade 2", CODIGO_CLIENTE: 70293, TOKEN_API: "YF0ipnJjeIxd" },
-      "5": { nome: "Unidade 5", CODIGO_CLIENTE: 488368, TOKEN_API: "YF0ipnJjeIxd" }
+      "1": { nome: "Unidade 1", CODIGO_CLIENTE: 18935,  TOKEN_API: "YF0ipnJjeIxd" },
+      "2": { nome: "Unidade 2", CODIGO_CLIENTE: 70293,  TOKEN_API: "YF0ipnJjeIxd" },
+      "3": { nome: "Unidade 3", CODIGO_CLIENTE: 19240,  TOKEN_API: "YF0ipnJjeIxd" },
+      "4": { nome: "Unidade 4", CODIGO_CLIENTE: 73807,  TOKEN_API: "YF0ipnJjeIxd" },
+      "5": { nome: "Unidade 5", CODIGO_CLIENTE: 488368, TOKEN_API: "YF0ipnJjeIxd" },
+      "6": { nome: "Unidade 6", CODIGO_CLIENTE: 488369, TOKEN_API: "YF0ipnJjeIxd" }
     };
 
     const DEFAULT_MODULO = 1;
