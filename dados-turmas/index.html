@@ -22,7 +22,10 @@
     --alunos-max-h:520px;
     --text:#111827;
     --border:#a5acb9;
-  }
+    --danger:#dc2626;
+    --danger-hover:#b91c1c;
+}
+
 
   *{ box-sizing:border-box; color:var(--text); }
   body{
@@ -35,9 +38,8 @@
   h1{ margin:0 0 6px }
 
   .container{ max-width:1200px; margin:0 auto; padding:0 16px 48px }
-  .cols{ display:grid; grid-template-columns:1fr; gap:18px } /* apenas 1 coluna (Turmas); o box de Alunos vira modal */
+  .cols{ display:grid; grid-template-columns:1fr; gap:18px }
 
-  /* Cards principais (tabelas) */
   .card{
     background:var(--card);
     border-radius:16px;
@@ -50,132 +52,178 @@
     overflow:hidden;
   }
 
-  /* Card compacto (KPI) – altura automática */
-  .card-compact{
-    height:auto;
-    grid-template-rows:auto auto;
-    padding:16px;
-  }
-
+  .card-compact{ height:auto; grid-template-rows:auto auto; padding:16px; }
   .muted{ color:var(--muted) }
 
   table{ width:100%; border-collapse:collapse; background:#ffffff }
-  th,td{
-    padding:10px;
-    border-bottom:1px solid var(--border);
-    text-align:left;
-    font-size:16px;
-    vertical-align:top;
-  }
+  th,td{ padding:10px; border-bottom:1px solid var(--border); text-align:left; font-size:16px; vertical-align:top; }
   tbody tr:hover td{ color:var(--brand); background:#ffffff }
 
   a{ color:inherit; text-decoration:none }
   a:hover{ color:var(--brand) }
 
-  button {
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: var(--brand);
-    color: #fff;
-    cursor: pointer;
-    font-weight: 600;
-    border: 1px solid var(--brand);
-    transition: all 0.2s ease;
-  }
-  button:hover { transform: scale(1.05); background: var(--brand); color: #fff; border-color: var(--brand); }
+  button{ padding:10px 12px; border-radius:10px; background:var(--brand); color:#fff; cursor:pointer; font-weight:600; border:1px solid var(--brand); transition:all .2s ease; }
+  button:hover{ transform:scale(1.05); background:var(--brand); color:#fff; border-color:var(--brand); }
 
-  button.ver-alunos {
-    padding: 5px 5px; font-size: 15px;
-    background-color: var(--brand); color: #fff;
-    border: 1px solid var(--brand); border-radius: 10px;
-    cursor: pointer; font-weight: 600; transition: all 0.2s ease;
-  }
-  button.ver-alunos:hover { background-color: var(--brand); color:#fff; border-color: var(--brand); transform: scale(1.05); }
+  button.ver-alunos{ padding:5px 5px; font-size:15px; background-color:var(--brand); color:#fff; border:1px solid var(--brand); border-radius:10px; cursor:pointer; font-weight:600; transition:all .2s ease; }
+  button.ver-alunos:hover{ background-color:var(--brand); color:#fff; border-color:var(--brand); transform:scale(1.05); }
 
-  .select {
+  .select{
     appearance:none; -webkit-appearance:none; -moz-appearance:none;
     display:inline-block; background:var(--brand); color:#fff;
     border-radius:15px; padding:5px 14px; border:1px solid var(--brand);
     font-weight:600; cursor:pointer; transition:all .2s ease;
   }
-  .select:hover, .select:focus { transform:scale(1.05); background:var(--brand); color:#fff; border-color:var(--brand); outline:none; }
-  .select option { color:var(--text); background:#ffffff; }
-  .arrow-down{
-    position:absolute; right:10px; top:50%; transform:translateY(-50%);
-    width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid white; pointer-events:none;
-  }
+  .select:hover,.select:focus{ transform:scale(1.05); background:var(--brand); color:#fff; border-color:var(--brand); outline:none; }
+  .select option{ color:var(--text); background:#ffffff; }
+  .arrow-down{ position:absolute; right:10px; top:50%; transform:translateY(-50%); width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid white; pointer-events:none; }
 
-.tag{
-  font:12px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  color: var(--brand);                   /* texto branco */
-  border:1px solid var(--brand);
-  border-radius:6px;
-  padding:2px 8px;
-}
+  .tag{
+    font:12px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    color:var(--brand);
+    border:1px solid var(--brand);
+    border-radius:6px;
+    padding:2px 8px;
+    margin-left:10px;
+  }
 
   .scroll,.alunos-scroll{ margin-top:12px; overflow:auto; min-height:0 }
 
   .control-row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap }
-  label { font-weight:700 }
+  label{ font-weight:700 }
 
-  /* KPIs */
   .kpi-grid{ display:flex; gap:24px; flex-wrap:wrap; margin-top:8px }
   .kpi-box{ display:flex; align-items:baseline; gap:10px; }
   .kpi-number{ font-size:36px; font-weight:900; color:var(--brand); line-height:1; }
   .kpi-label{ font-size:14px; color:var(--muted); }
-
   .kpi-sub{ display:flex; align-items:baseline; gap:10px; margin-top:12px }
   .hidden{ display:none !important; }
 
-  /* ==== Foto ao lado do nome ==== */
-  .aluno-cell { display:flex; align-items:center; gap:10px; }
-  .aluno-foto {
-    width:36px; height:36px; border-radius:50%;
-    object-fit:cover; border:1px solid var(--border);
-    background:#f2f2f2;
-  }
+  .aluno-cell{ display:flex; align-items:center; gap:10px; }
+  .aluno-foto{ width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid var(--border); background:#f2f2f2; }
 
-  /* ===== MODAL (box) ===== */
-  .modal {
-    position: fixed;
-    inset: 0;
-    display: none; /* abre com .is-open */
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: rgba(17, 24, 39, .5); /* backdrop */
-    z-index: 9999;
-  }
-  .modal.is-open { display: flex; }
-  .modal-dialog {
-    width: min(1000px, 96vw);
-    max-height: 85vh;
-    background: var(--card);
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0,0,0,.2);
-    display: grid;
-    grid-template-rows: auto 1fr;
-    overflow: hidden;
-    animation: pop .14s ease-out;
-  }
-  @keyframes pop { from{ transform: scale(.96); opacity: .6 } to{ transform: scale(1); opacity: 1 } }
-
-  .modal-header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding: 16px 16px; border-bottom:1px solid var(--border);
-  }
-  .modal-body{ padding: 8px 16px 16px; overflow:auto }
+  /* ===== MODAL ===== */
+  .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(17,24,39,.5); z-index:9999; }
+  .modal.is-open{ display:flex; }
+  .modal-dialog{ width:min(1000px,96vw); max-height:85vh; background:var(--card); border-radius:16px; border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,.2); display:grid; grid-template-rows:auto 1fr; overflow:hidden; animation:pop .14s ease-out; }
+  @keyframes pop{ from{ transform:scale(.96); opacity:.6 } to{ transform:scale(1); opacity:1 } }
+  .modal-header{ display:flex; align-items:center; justify-content:space-between; padding:16px 16px; border-bottom:1px solid var(--border); }
+  .modal-body{ padding:8px 16px 16px; overflow:auto }
   .btn-icon{ background:transparent; color:var(--text); border:1px solid var(--border); }
   .btn-icon:hover{ background:#fff; }
+  .no-scroll{ overflow:hidden; }
 
-  .no-scroll { overflow: hidden; }
+  /* ===== PERFIL BOX (ficha do aluno) ===== */
+  #modalFicha .modal-body{
+  overflow: hidden;                 /* remove a barra externa */
+  display: grid;
+  grid-template-rows: 1fr;          /* ocupa toda a altura disponível */
+}
+  .perfil-card{
+    width:min(560px, 92vw);
+    margin:0 auto;
+    background:#fff;
+    border-radius:16px;
+    border:1px solid var(--border);
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+    display:grid;
+    grid-template-rows:auto 1fr;
+    height: 100%;
+    max-height: none;
+    overflow:hidden;                
+  }
+  .perfil-top{
+    padding:24px 24px 12px;
+    text-align:center;
+    position:relative;
+  }
+  .perfil-avatar{
+    width:96px; height:96px; border-radius:50%;
+    display:inline-grid; place-items:center;
+    background:#e5e7eb; color:#374151; font-weight:800;
+    border:4px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,.08);
+    object-fit:cover;
+  }
+  .perfil-nome{ margin:10px 0 4px; font-size:24px; font-weight:900; }
+  .perfil-sub{ color:var(--muted); font-size:14px; }
+  .perfil-scroll{
+    padding:16px 20px 24px;
+    overflow:auto;                  /* rolagem interna do conteúdo */
+    min-height: 0;
+  }
+  .campo{ margin:12px 0 0 }
+  .campo label{ display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
+  .valor{ font-weight:700; }
+  .responsavel{ padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; margin-top:8px; }
+
+  /*Deixar a cor do nome do aluno laranja também*/
+  #modalAlunos #tblAlunos tbody tr:hover td{
+  color: var(--brand);
+  background: #ffffff;
+}
+#modalAlunos .aluno-cell span{
+  transition: color .15s ease;
+  cursor: pointer; /* redundante, mas explícito para o nome */
+}
+#modalAlunos .aluno-cell span:hover{
+  color: var(--brand);
+}
+#modalAlunos .aluno-cell:hover .aluno-foto{
+  border-color: var(--brand);
+}
+
+/*Botão de fechar*/
+/* Padrão para botões de fechar (classe já usada no HTML) */
+button.btn-icon{
+  background: var(--danger) !important;
+  color: #fff !important;
+  border: 1px solid var(--danger) !important;
+  font-weight: 900;
+  line-height: 1;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+button.btn-icon:hover,
+button.btn-icon:focus{
+  background: var(--danger-hover) !important;
+  border-color: var(--danger-hover) !important;
+  color:#fff !important;
+  transform: scale(1.05);
+  outline: none;
+}
+
+/* Caso existam outros botões de fechar sem a classe (por segurança) */
+button[aria-label="Fechar"],
+button[aria-label="fechar"],
+button[title~="Fechar"],
+button[title~="fechar"]{
+  background: var(--danger) !important;
+  color:#fff !important;
+  border:1px solid var(--danger) !important;
+}
+button[aria-label="Fechar"]:hover,
+button[aria-label="fechar"]:hover,
+button[title~="Fechar"]:hover,
+button[title~="fechar"]:hover{
+  background: var(--danger-hover) !important;
+  border-color: var(--danger-hover) !important;
+  color:#fff !important;
+}
+
+/* Se o "✕" for um span/svg dentro do botão, garante branco */
+.btn-icon > *,
+button[aria-label="Fechar"] > *,
+button[title~="Fechar"] > *{
+  color:#fff !important;
+  fill:#fff !important;
+  stroke:#fff !important;
+}
 </style>
 </head>
 <body>
 
   <!-- NAVBAR -->
-  <nav class="sticky top-0 z-50 bg-white border-b-4 border-[#FD7F08]">
+  <nav class="sticky top-0 z-50 bg-white border-b-[3px] border-[#FD7F08]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-24">
         <div class="flex-shrink-0">
@@ -200,7 +248,6 @@
       </div>
     </div>
   </nav>
-  <!-- Fim da NAVBAR -->
 
   <header></header>
 
@@ -226,38 +273,30 @@
       </div>
     </div>
 
-    <!-- CARD RESUMO: TURMAS (compacto) -->
+    <!-- RESUMOS -->
     <div id="cardResumoTurmas" class="card card-compact" style="display:none">
       <div class="control-row" style="justify-content:space-between">
         <h3 style="margin:0">Turmas</h3>
         <div id="statusResumoTurmas" class="muted">—</div>
       </div>
       <div class="kpi-grid">
-        <div class="kpi-box">
-          <div id="kpiTotalTurmas" class="kpi-number">—</div>
-          <div class="kpi-label">turma(s) abertas</div>
-        </div>
+        <div class="kpi-box"><div id="kpiTotalTurmas" class="kpi-number">—</div><div class="kpi-label">turma(s) abertas</div></div>
       </div>
     </div>
 
-    <!-- CARD RESUMO: ALUNOS (compacto, ao lado) -->
     <div id="cardResumoAlunos" class="card card-compact" style="display:none">
       <div class="control-row" style="justify-content:space-between">
         <h3 style="margin:0">Alunos</h3>
         <div id="statusResumoAlunos" class="muted">—</div>
       </div>
       <div class="kpi-grid">
-        <div class="kpi-box">
-          <div id="kpiTotalAlunosUnidade" class="kpi-number">—</div>
-          <div class="kpi-label">alunos na unidade</div>
-        </div>
+        <div class="kpi-box"><div id="kpiTotalAlunosUnidade" class="kpi-number">—</div><div class="kpi-label">alunos na unidade</div></div>
       </div>
       <div id="kpiTurmaSelecionada" class="kpi-sub hidden">
         <div id="kpiQtdAlunosTurma" class="kpi-number">0</div>
         <div id="kpiLabelTurma" class="kpi-label">alunos na turma selecionada</div>
       </div>
     </div>
-    <!-- FIM DOS CARDS COMPACTOS -->
   </div>
 
   <!-- ===== MODAL: ALUNOS DA TURMA ===== -->
@@ -273,13 +312,63 @@
       <div class="modal-body">
         <div class="alunos-scroll">
           <table id="tblAlunos" style="display:none">
-            <thead>
-              <tr>
-                <th>Nome</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Nome</th></tr></thead>
             <tbody id="tbodyAlunos"></tbody>
           </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: FICHA DO ALUNO (BOX) ===== -->
+  <div id="modalFicha" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalFichaTitulo">
+    <div class="modal-dialog" style="max-width:820px">
+      <div class="modal-header">
+        <h3 id="modalFichaTitulo" style="margin:0">Ficha do Aluno</h3>
+        <div class="control-row">
+          <div id="statusFicha" class="muted">Selecione um aluno.</div>
+          <button id="btnFecharFicha" class="btn-icon" aria-label="Fechar">✕</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="perfil-card">
+          <div class="perfil-top">
+            <img id="fx_avatar" class="perfil-avatar" src="https://placehold.co/96x96/eeeeee/444?text=%F0%9F%91%A3" alt="Foto do aluno">
+            <div id="fx_nome" class="perfil-nome">—</div>
+            <div id="fx_sub" class="perfil-sub">—</div>
+          </div>
+
+          <div class="perfil-scroll">
+            <div class="campo">
+              <label>Gênero</label>
+              <div id="fx_sexo" class="valor">—</div>
+            </div>
+
+            <div class="campo">
+              <label>CPF</label>
+              <div id="fx_cpf" class="valor">—</div>
+            </div>
+
+            <div class="campo">
+              <label>Login do Portal</label>
+              <div id="fx_login" class="valor">—</div>
+            </div>
+
+            <div class="campo">
+              <label>Senha do Portal</label>
+              <div id="fx_senha" class="valor">—</div> <!-- exibida direto -->
+            </div>
+
+            <div class="campo">
+              <label>Endereço</label>
+              <div id="fx_endereco" class="valor">—</div>
+            </div>
+
+            <div class="campo">
+              <label>Responsáveis</label>
+              <div id="fx_responsaveis">—</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -305,6 +394,24 @@
     };
     const mapTurno = (v) => ({ "-1":"MANHÃ","-2":"TARDE","-3":"NOITE","-4":"INTEGRAL" }[v] || v || "");
 
+    function calcularIdade(dnStr){
+      if(!dnStr) return "";
+      let d=null;
+      if(/^\d{2}\/\d{2}\/\d{4}$/.test(dnStr)){
+        const [dd,mm,aa]=dnStr.split("/");
+        d=new Date(+aa, +mm-1, +dd);
+      }else{
+        const t = Date.parse(dnStr);
+        if(!isNaN(t)) d=new Date(t);
+      }
+      if(!d) return "";
+      const hoje=new Date();
+      let idade=hoje.getFullYear()-d.getFullYear();
+      const m=hoje.getMonth()-d.getMonth();
+      if(m<0 || (m===0 && hoje.getDate()<d.getDate())) idade--;
+      return `${idade} ano${idade===1?"":"s"}`;
+    }
+
     function fetchXML(url){
       return new Promise((resolve,reject)=>{
         const xhr=new XMLHttpRequest();
@@ -319,7 +426,7 @@
       });
     }
 
-    // ---- API wrappers (dinâmicos) ----
+    // ---- API wrappers ----
     async function getTurmasAbertas(codigoCliente, token){
       const base="https://api.sponteeducacional.net.br/WSAPIEdu.asmx/GetTurmas";
       const sParametrosBusca="Situacao=-1";
@@ -327,10 +434,7 @@
       const xml=await fetchXML(url);
       const nodes=qAll(xml,"wsTurma");
       return nodes.map(t=>({
-        TurmaID:qt(t,"TurmaID"),
-        Nome:qt(t,"Nome"),
-        Turno:qt(t,"Turno"),
-        AnoLetivo:qt(t,"AnoLetivo"),
+        TurmaID:qt(t,"TurmaID"), Nome:qt(t,"Nome"), Turno:qt(t,"Turno"), AnoLetivo:qt(t,"AnoLetivo"),
       }));
     }
 
@@ -338,11 +442,9 @@
       const nomeTurma = qt(wrapper,"Nome");
       const integrantesRoot = q(wrapper,"Integrantes") || wrapper;
       let nodes = qAll(integrantesRoot,"wsIntegrante");
-      if(!nodes.length){
-        nodes = Array.from(integrantesRoot.children).filter(el=>q(el,"Nome"));
-      }
+      if(!nodes.length){ nodes = Array.from(integrantesRoot.children).filter(el=>q(el,"Nome")); }
       const integrantes = nodes.map(n=>({
-        AlunoID: qt(n,"AlunoID") || qt(n,"PessoaID") || "", // capturando ID
+        AlunoID: qt(n,"AlunoID") || qt(n,"PessoaID") || "",
         Nome: qt(n,"Nome"),
         RA: qt(n,"RA"),
         Situacao: qt(n,"Situacao")
@@ -360,7 +462,30 @@
       return parseIntegrantesTurma(wrapper);
     }
 
-    // ---- FOTO DO ALUNO ----
+    function parseAluno(node){
+      const respWrapper = q(node,"Responsaveis");
+      const respList = respWrapper ? qAll(respWrapper, "wsResponsaveis").map(r=>({
+        ResponsavelID: qt(r,"ResponsavelID"),
+        Nome: qt(r,"Nome"),
+        Parentesco: qt(r,"Parentesco"),
+      })) : [];
+      return {
+        AlunoID: qt(node,"AlunoID"),
+        Nome: qt(node,"Nome"),
+        CPF: qt(node,"CPF"),
+        Sexo: qt(node,"Sexo"),
+        DataNascimento: qt(node,"DataNascimento"),
+        LoginPortal: qt(node,"LoginPortal"),
+        SenhaPortal: qt(node,"SenhaPortal"),
+        Endereco: qt(node,"Endereco"),
+        NumeroEndereco: qt(node,"NumeroEndereco"),
+        Bairro: qt(node,"Bairro"),
+        Cidade: qt(node,"Cidade"),
+        CEP: qt(node,"CEP"),
+        Responsaveis: respList,
+      };
+    }
+
     async function getFotoAluno(codigoCliente, token, alunoId){
       if(!alunoId) return null;
       const base="https://api.sponteeducacional.net.br/WSAPIEdu.asmx/GetImageApp";
@@ -371,9 +496,26 @@
         const node = fotoTag && fotoTag.childNodes && fotoTag.childNodes[7];
         const b64 = node && (node.textContent || node.innerHTML || "").trim();
         return b64 ? `data:image/jpeg;base64,${b64}` : null;
-      }catch(e){
-        return null;
+      }catch(e){ return null; }
+    }
+
+    async function getAlunoDetalhes(codigoCliente, token, alunoId, nomeAluno){
+      const base = "https://api.sponteeducacional.net.br/WSAPIEdu.asmx/GetAlunos";
+      async function chamar(sParametrosBusca){
+        const url = `${base}?nCodigoCliente=${encodeURIComponent(codigoCliente)}&sToken=${encodeURIComponent(token)}&sParametrosBusca=${encodeURIComponent(sParametrosBusca)}`;
+        const xml = await fetchXML(url);
+        const nodes = qAll(xml, "wsAluno");
+        return nodes.map(parseAluno);
       }
+      try{
+        const porId = await chamar(`AlunoID=${alunoId}`);
+        if(porId && porId.length) return porId[0];
+      }catch(e){}
+      try{
+        const porNome = await chamar(`Nome=${nomeAluno||""}`);
+        const exata = porNome.find(a=>a.AlunoID===String(alunoId));
+        return exata || porNome[0] || null;
+      }catch(e){ console.error(e); return null; }
     }
 
     // ---- Estado/UI ----
@@ -382,14 +524,12 @@
     const tblTurmas=document.getElementById("tblTurmas");
     const tbodyTurmas=document.getElementById("tbodyTurmas");
 
-    // Elementos do MODAL
     const modalAlunos = document.getElementById('modalAlunos');
     const btnFecharModal = document.getElementById('btnFecharModal');
     const statusAlunos=document.getElementById("statusAlunos");
     const tblAlunos=document.getElementById("tblAlunos");
     const tbodyAlunos=document.getElementById("tbodyAlunos");
 
-    // Elementos dos cards de resumo
     const cardResumoTurmas = document.getElementById("cardResumoTurmas");
     const statusResumoTurmas = document.getElementById("statusResumoTurmas");
     const kpiTotalTurmas = document.getElementById("kpiTotalTurmas");
@@ -401,10 +541,24 @@
     const kpiQtdAlunosTurma = document.getElementById("kpiQtdAlunosTurma");
     const kpiLabelTurma = document.getElementById("kpiLabelTurma");
 
-    function getUnidadeAtual(){
-      const key = selUnidade.value || "2";
-      return UNIDADES[key];
-    }
+    // Ficha (box)
+    const modalFicha = document.getElementById('modalFicha');
+    const btnFecharFicha = document.getElementById('btnFecharFicha');
+    const statusFicha = document.getElementById('statusFicha');
+
+    const FX = {
+      avatar: document.getElementById('fx_avatar'),
+      nome: document.getElementById('fx_nome'),
+      sub: document.getElementById('fx_sub'),
+      sexo: document.getElementById('fx_sexo'),
+      cpf: document.getElementById('fx_cpf'),
+      login: document.getElementById('fx_login'),
+      senha: document.getElementById('fx_senha'),
+      end: document.getElementById('fx_endereco'),
+      resps: document.getElementById('fx_responsaveis'),
+    };
+
+    function getUnidadeAtual(){ const key = selUnidade.value || "2"; return UNIDADES[key]; }
 
     function limparAlunos(){
       statusAlunos.textContent="Selecione uma turma.";
@@ -413,45 +567,39 @@
       kpiTurmaSelecionada.classList.add("hidden");
     }
 
-    // Helpers do modal
-    function abrirModal(){
-      modalAlunos.classList.add('is-open');
-      modalAlunos.setAttribute('aria-hidden','false');
-      document.body.classList.add('no-scroll');
-    }
-    function fecharModal(){
-      modalAlunos.classList.remove('is-open');
-      modalAlunos.setAttribute('aria-hidden','true');
-      document.body.classList.remove('no-scroll');
-    }
+    function abrirModal(){ modalAlunos.classList.add('is-open'); modalAlunos.setAttribute('aria-hidden','false'); document.body.classList.add('no-scroll'); }
+    function fecharModal(){ modalAlunos.classList.remove('is-open'); modalAlunos.setAttribute('aria-hidden','true'); document.body.classList.remove('no-scroll'); }
 
-    // Conta alunos da unidade somando todas as turmas abertas
+    function abrirModalFicha(){ modalFicha.classList.add('is-open'); modalFicha.setAttribute('aria-hidden','false'); document.body.classList.add('no-scroll'); }
+    function fecharModalFicha(){ modalFicha.classList.remove('is-open'); modalFicha.setAttribute('aria-hidden','true'); document.body.classList.remove('no-scroll'); }
+
+    btnFecharFicha.addEventListener('click', fecharModalFicha);
+    modalFicha.addEventListener('click', (e)=>{ if(e.target===modalFicha) fecharModalFicha(); });
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && modalFicha.classList.contains('is-open')) fecharModalFicha(); });
+
+    // KPIs gerais
     async function contarAlunosUnidade(codigoCliente, token, turmas){
       let total = 0;
       for(const t of turmas){
         try{
           const { integrantes } = await getIntegrantesTurma(codigoCliente, token, t.TurmaID);
           total += integrantes.length;
-        }catch(e){
-          console.warn("Falhou turma", t.TurmaID, e);
-        }
+        }catch(e){ console.warn("Falhou turma", t.TurmaID, e); }
       }
       return total;
     }
 
-    // >>> NOVO: preencher badge de quantidade ao lado do nome da turma <<<
     async function preencherQtdAlunosPorTurma(codigoCliente, token, turmas){
-      for (let i = 0; i < turmas.length; i++) {
-        const t = turmas[i];
+      for(const t of turmas){
         const safeId = String(t.TurmaID || "").replace(/[^a-zA-Z0-9_-]/g, "");
         const alvo = document.getElementById(`qtd-${safeId}`);
-        if (!alvo) continue;
-        await new Promise(r => setTimeout(r, 120)); // espaçar requests
-        try {
+        if(!alvo) continue;
+        await new Promise(r=>setTimeout(r,120));
+        try{
           const { integrantes } = await getIntegrantesTurma(codigoCliente, token, t.TurmaID);
           alvo.textContent = integrantes.length;
           alvo.setAttribute("title", `${integrantes.length} aluno(s)`);
-        } catch(e) {
+        }catch(e){
           console.warn("Falha ao contar alunos da turma", t.TurmaID, e);
           alvo.textContent = "—";
           alvo.setAttribute("title", "Não foi possível obter a quantidade");
@@ -464,12 +612,10 @@
       const { CODIGO_CLIENTE, TOKEN_API, nome } = getUnidadeAtual();
       try{
         statusTurmas.textContent=`Carregando turmas abertas de ${nome}...`;
-
-        // prepara cards
         cardResumoTurmas.style.display="none";
         cardResumoAlunos.style.display="none";
-        kpiTotalTurmas.textContent = "—";
-        kpiTotalAlunosUnidade.textContent = "—";
+        kpiTotalTurmas.textContent="—";
+        kpiTotalAlunosUnidade.textContent="—";
         statusResumoTurmas.textContent="—";
         statusResumoAlunos.textContent="—";
 
@@ -488,36 +634,29 @@
           </tr>`;
         }).join("");
 
-        // Preenche badges de quantidade por turma (sem quebrar nada do resto)
         preencherQtdAlunosPorTurma(CODIGO_CLIENTE, TOKEN_API, turmas);
 
-        // Mostra cards compactos (resumos)
-        cardResumoTurmas.style.display = "";
-        cardResumoAlunos.style.display = "";
+        cardResumoTurmas.style.display="";
+        cardResumoAlunos.style.display="";
+        kpiTotalTurmas.textContent=turmas.length;
+        statusResumoTurmas.textContent="Atualizado agora";
 
-        // KPIs
-        kpiTotalTurmas.textContent = turmas.length;
-        statusResumoTurmas.textContent = "Atualizado agora";
-
-        kpiTotalAlunosUnidade.textContent = "…"; // carregando
-        statusResumoAlunos.textContent = "Atualizando…";
-
-        // Calcula total de alunos da unidade
+        kpiTotalAlunosUnidade.textContent="…";
+        statusResumoAlunos.textContent="Atualizando…";
         const totalAlunos = await contarAlunosUnidade(CODIGO_CLIENTE, TOKEN_API, turmas);
         kpiTotalAlunosUnidade.textContent = totalAlunos;
         statusResumoAlunos.textContent = "Atualizado agora";
-
       }catch(e){
         console.error(e);
         statusTurmas.textContent=`Erro ao carregar turmas de ${nome}.`;
         tblTurmas.style.display="none";
         tbodyTurmas.innerHTML="";
-        cardResumoTurmas.style.display = "";
-        cardResumoAlunos.style.display = "";
-        kpiTotalTurmas.textContent = "—";
-        kpiTotalAlunosUnidade.textContent = "—";
-        statusResumoTurmas.textContent = "Erro";
-        statusResumoAlunos.textContent = "Erro";
+        cardResumoTurmas.style.display="";
+        cardResumoAlunos.style.display="";
+        kpiTotalTurmas.textContent="—";
+        kpiTotalAlunosUnidade.textContent="—";
+        statusResumoTurmas.textContent="Erro";
+        statusResumoAlunos.textContent="Erro";
       }
     }
 
@@ -532,18 +671,20 @@
         const labelNome = (nomeTurma || turmaNome || `Turma ${turmaId}`);
         statusAlunos.textContent=`${nome} – ${labelNome}: ${integrantes.length} aluno(s).`;
         tblAlunos.style.display="";
+        // Ordem alfabética
+        integrantes.sort((a, b) => a.Nome.localeCompare(b.Nome, 'pt', { sensitivity: 'base' }));
 
-        // Monta linhas com IMG ao lado do nome
+
         tbodyAlunos.innerHTML = integrantes.map(a=>{
-          const id = a.AlunoID || a.RA || ""; // usamos AlunoID; se faltar, tenta RA
-          const safeId = String(id).replace(/[^a-zA-Z0-9_-]/g, ""); // p/ id do elemento
-          const alt = (a.Nome||"").replace(/"/g, '&quot;');
+          const id = a.AlunoID || a.RA || "";
+          const safeId = String(id).replace(/[^a-zA-Z0-9_-]/g, "");
+          const alt = (a.Nome||"").replace(/"/g,'&quot;');
           return `
             <tr data-aluno-id="${id}">
               <td>
                 <div class="aluno-cell">
                   <img class="aluno-foto" id="foto-${safeId}" src="./../img/profile.png" alt="${alt}">
-                  <span>${a.Nome || ""}</span>
+                  <span style="cursor:pointer">${a.Nome || ""}</span>
                 </div>
               </td>
               <td>${a.RA || ""}</td>
@@ -551,20 +692,17 @@
             </tr>`;
         }).join("");
 
-
-
-        // Busca as fotos com um pequeno atraso incremental (evita rajada de requisições)
+        // fotos
         integrantes.forEach((a, idx)=>{
           const id = a.AlunoID || a.RA || "";
           if(!id) return;
           const imgId = String(id).replace(/[^a-zA-Z0-9_-]/g, "");
           const imgEl = document.getElementById(`foto-${imgId}`);
           if(!imgEl) return;
-
           setTimeout(async ()=>{
             const src = await getFotoAluno(CODIGO_CLIENTE, TOKEN_API, id);
-            if(src) imgEl.src = src; // se não vier, mantém placeholder
-          }, idx * 120); // 120ms entre cada chamada
+            if(src) imgEl.src = src;
+          }, idx*120);
         });
 
       }catch(e){
@@ -573,20 +711,80 @@
       }
     }
 
-    // Troca de unidade => recarrega turmas
     selUnidade.addEventListener("change", carregarTurmas);
 
-    // Delegação para botões "Ver alunos"
-    document.addEventListener("click",async ev=>{
+    document.addEventListener("click", async ev=>{
       const btn=ev.target.closest("button.ver-alunos");
-      if(!btn)return;
+      if(!btn) return;
       await carregarAlunosDaTurma(btn.getAttribute("data-turma"), btn.getAttribute("data-turmanome"));
     });
 
-    // Fechamento do modal
     btnFecharModal.addEventListener('click', fecharModal);
     modalAlunos.addEventListener('click', (e)=>{ if(e.target === modalAlunos) fecharModal(); });
     window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && modalAlunos.classList.contains('is-open')) fecharModal(); });
+
+    // Clique na linha do aluno => abre BOX com rolagem
+    let fichaListenerInstalado = false;
+    function instalarListenerFicha(){
+      if(fichaListenerInstalado) return;
+      fichaListenerInstalado = true;
+
+      tbodyAlunos.addEventListener('click', async (ev)=>{
+        const tr = ev.target.closest('tr[data-aluno-id]');
+        if(!tr) return;
+
+        const id = tr.getAttribute('data-aluno-id');
+        const nomeEl = tr.querySelector('.aluno-cell span');
+        const nome = nomeEl ? nomeEl.textContent.trim() : '';
+
+        const { CODIGO_CLIENTE, TOKEN_API } = getUnidadeAtual();
+        statusFicha.textContent = 'Carregando ficha do aluno...';
+        abrirModalFicha();
+
+        try{
+          const a = await getAlunoDetalhes(CODIGO_CLIENTE, TOKEN_API, id, nome);
+          if(!a){ statusFicha.textContent='Não foi possível obter a ficha deste aluno.'; return; }
+
+          // Cabeçalho do box
+          FX.nome.textContent = a.Nome || '';
+          const idade = calcularIdade(a.DataNascimento);
+          FX.sub.textContent = idade ? `${idade}` : '';
+          // Foto do aluno
+          const foto = await getFotoAluno(CODIGO_CLIENTE, TOKEN_API, a.AlunoID);
+          FX.avatar.src = foto || "https://placehold.co/96x96/eeeeee/444?text=%F0%9F%91%A3";
+
+          // Campos
+          FX.sexo.textContent  = a.Sexo || '';
+          FX.cpf.textContent   = a.CPF || '';
+          FX.login.textContent = a.LoginPortal || '';
+          FX.senha.textContent = a.SenhaPortal || ''; // EXIBE DIRETO
+
+          const endParts = [
+            a.Endereco || '',
+            a.NumeroEndereco ? `, ${a.NumeroEndereco}` : '',
+            a.Bairro ? ` – ${a.Bairro}` : '',
+            a.Cidade ? ` – ${a.Cidade}` : '',
+            a.CEP ? ` • CEP ${a.CEP}` : ''
+          ];
+          FX.end.textContent = endParts.join('');
+
+          // Responsáveis (lista)
+          if(a.Responsaveis && a.Responsaveis.length){
+            FX.resps.innerHTML = a.Responsaveis.map(r=>(
+              `<div class="responsavel"><strong>${r.Nome||'-'}</strong><br><span class="muted">${r.Parentesco||'-'}</span></div>`
+            )).join("");
+          }else{
+            FX.resps.innerHTML = `<div class="muted">Sem responsáveis cadastrados.</div>`;
+          }
+
+          statusFicha.textContent = 'Ficha carregada';
+        }catch(e){
+          console.error(e);
+          statusFicha.textContent = 'Erro ao carregar a ficha.';
+        }
+      });
+    }
+    instalarListenerFicha();
 
     // Inicialização
     carregarTurmas();
