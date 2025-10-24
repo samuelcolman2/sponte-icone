@@ -346,6 +346,17 @@
           </div>
 
           <textarea id="modalObs" class="mt-3 w-full min-h[110px] rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20" placeholder="Escreva sua observação…"></textarea>
+          <div class="mt-3">
+            <label class="block text-sm text-slate-700 font-medium mb-1">
+              Enviar cópia para (opcional)
+            </label>
+            <input id="modalExtras" type="text"
+                  placeholder="digite e-mails separados por vírgula"
+                  class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20">
+            <p class="mt-1 text-xs text-slate-500">Ex.: fulano@icone.g12.br, atendimento@icone.g12.br</p>
+          </div>
+
+
 
           <div class="mt-1 flex items-center justify-between">
             <span id="modalError" class="text-xs text-red-600 hidden">Informe o motivo da reprovação ou ative “Não justificar”.</span>
@@ -411,7 +422,7 @@
     'samuel.colman@icone.g12.br',
     'solucoes.financeiro@icone.g12.br'
   ].map(e => e.toLowerCase()));
-  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzozshaxht6G5yJ1Jn7cCfTQ1JfPiPLywQ9hBIIn2ZIDFq0vw6fC65Au8dyhX05h7sb/exec';
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzGd-7iP9i6LUDkLGWtkFYPJRzQ7AjOOHaiVl4SbQZPedB5ouKbsqAv4kZffEC8zzxO/exec';
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -560,13 +571,14 @@ if (btnSair) {
   }
 
 
-  async function atualizarStatus(submissionId, novoStatus, observacao=''){
+    async function atualizarStatus(submissionId, novoStatus, observacao='', extraNotify=''){
     const body = new URLSearchParams({
       action: 'updatestatus',
       submissionId,
       status: novoStatus,
       observacao,
-      aprovador: currentUser?.email || ''
+      aprovador: currentUser?.email || '', 
+      extraNotify
     });
     const { ok, error } = await chamarAPI(WEBAPP_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}, body });
     if(!ok) throw new Error(error||'Falha ao atualizar');
@@ -924,6 +936,7 @@ function renderTabela(lista){
     $('#modalTitulo').textContent = act==='aprovar' ? 'Confirmar aprovação' : 'Confirmar reprovação';
     $('#modalHelp').textContent = 'Você pode adicionar uma observação.';
     $('#modalObs').value='';
+    $('#modalExtras').value='';
     $('#modalError').classList.add('hidden');
     $('#modalConfirmar').disabled = false;
     $('#toggleNoJustify')?.classList.remove('active');
@@ -964,6 +977,7 @@ function renderTabela(lista){
     const { id, act, noJustify } = modalState; if(!id||!act) return;
 
     const obs = noJustify ? '' : $('#modalObs').value.trim();
+    const extras = ($('#modalExtras')?.value || '').trim();
 
     if(act==='reprovar' && !noJustify && !obs){
       $('#modalError').classList.remove('hidden');
@@ -972,8 +986,7 @@ function renderTabela(lista){
     }
 
     try{
-      await atualizarStatus(id, act==='aprovar' ? 'aprovado' : 'reprovado', obs);
-
+      await atualizarStatus(id, act==='aprovar' ? 'aprovado' : 'reprovado', obs, extras);
       const alvo = dadosBrutos.find(x=>x.submissionId===id);
       if(alvo){
         alvo.status = act==='aprovar' ? 'aprovado' : 'reprovado';
