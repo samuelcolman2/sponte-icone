@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Admin • Aprovação de Compras</title>
+
+  <!-- Fonte + Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Toastify -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <link rel="shortcut icon" href="https://storage.googleapis.com/ecdt-logo-saida/1ebe52af502e25d3521cb9dad62bb72f6bc1c347353cdda5fa381ef8627a9eb8/COLEGIO-E-CURSO-ICONE.webp" type="image/x-icon">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primaria: '#F1663C' },
+          boxShadow: { glow: '0 0 0 3px rgba(241,102,60,0.15), 0 10px 25px -5px rgba(0,0,0,0.25)' },
+          screens: { xs: '380px' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
+    /* ===== Variáveis da Navbar (Cantina) ===== */
+    :root{
+      --brand:#F1663C;
+      --white:#FFFFFF;
+      --cantina-primary:#FD7F08;
+      --cantina-secondary:#253237; /* fundo da navbar */
+      --cantina-text:#FD7F08;
+      --cantina-border:#e2e8f0;
+    }
+
+    /* ===== Navbar Cantina (adaptada p/ Poppins) ===== */
+    nav.cantina-nav{
+      position:sticky; top:0; z-index:50;
+      background:var(--cantina-secondary);
+      border-bottom:3px solid var(--cantina-primary);
+      color:var(--cantina-text);
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    nav.cantina-nav .cantina-container{
+      max-width:min(98vw, 1400px); margin:0 auto; padding:0 12px;
+      height:96px; display:flex; align-items:center; justify-content:space-between;
+    }
+    nav.cantina-nav a{ display:flex; align-items:center; text-decoration:none; }
+    nav.cantina-nav img{ height:64px; width:auto; }
+    nav.cantina-nav .brand{ display:flex; align-items:center; gap:12px; color:var(--cantina-text); height:100%; }
+    nav.cantina-nav .brand .divider{ width:2px; height:70%; align-self:center; background:var(--cantina-primary); border-radius:2px; }
+    nav.cantina-nav .brand .title{
+      font-weight:800; letter-spacing:.5px;
+      font-size:clamp(18px, 3.8vw, 32px);
+      line-height:1.15; white-space:normal; word-break:keep-all;
+      color:var(--cantina-text);
+      text-transform:uppercase;
+    }
+    nav.cantina-nav .actions{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    nav.cantina-nav .btn{
+      padding:10px 12px; border-radius:12px; border:1px solid var(--cantina-border);
+      background:#fff; color:#000; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease;
+      font-weight:600;
+    }
+    nav.cantina-nav .btn:hover{ transform:translateY(-1px); box-shadow:0 2px 10px rgba(2,8,23,.06); }
+    nav.cantina-nav .menu-toggle{
+      display:none; border:1px solid var(--cantina-border);
+      background:#fff; color:#000; border-radius:10px;
+      padding:8px; cursor:pointer;
+    }
+    nav.cantina-nav .menu-toggle:focus-visible,
+    nav.cantina-nav .btn:focus-visible{
+      outline:2px solid var(--cantina-primary);
+      outline-offset:2px;
+    }
+    nav.cantina-nav .email{
+      color:#e2e8f0; font-size:12px; padding:6px 10px; border-radius:10px; background:rgba(255,255,255,0.06);
+      border:1px solid rgba(226,232,240,0.18); max-width:52ch; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+
+    /* Mobile header */
+    @media (max-width: 640px){
+      nav.cantina-nav .cantina-container{ height:72px; position:relative; }
+      nav.cantina-nav img{ height:48px; }
+      nav.cantina-nav .brand{ flex:1; min-width:0; }
+      nav.cantina-nav .menu-toggle{
+        display:inline-flex; align-items:center; justify-content:center;
+        width:40px; height:40px; padding:6px; border-radius:10px;
+      }
+      nav.cantina-nav .menu-toggle svg{ width:18px; height:18px; }
+      nav.cantina-nav .actions{
+        position:absolute; right:12px; top:calc(100% + 8px); z-index:60;
+        display:none; flex-direction:column; gap:6px;
+        background:#ffffff; border:1px solid var(--cantina-border); border-radius:12px;
+        padding:10px; width:min(78vw, 280px); box-shadow:0 12px 30px rgba(2,8,23,.18);
+      }
+      nav.cantina-nav .actions.open{ display:flex; }
+      nav.cantina-nav .actions .btn{ width:100%; justify-content:center; }
+      nav.cantina-nav .actions .email{ color:#0f172a; background:#f8fafc; border-color:#e2e8f0; }
+    }
+    @media (max-width: 400px){
+      nav.cantina-nav .brand .title{ font-size:clamp(16px, 5vw, 22px); }
+    }
+
+    /* Badge (sem @apply) */
+    .badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:9999px; font-size:12px; font-weight:600; border-width:1px; }
+
+    /* Switch tipo iOS */
+    #toggleNoJustify.active { background-color: #F1663C; }
+    #toggleNoJustify.active span { transform: translateX(1.25rem); }
+
+    /* Tabs (sem @apply) */
+    .tab-btn { border-radius:0.5rem; padding:0.375rem 0.75rem; font-size:0.875rem; font-weight:600; border:1px solid; transition: all .2s ease; }
+    .tab-active { background:#fff; color:#0f172a; border-color:#fff; box-shadow: 0 8px 16px -8px rgba(0,0,0,.25); }
+    .tab-idle { background:rgba(255,255,255,.7); color:#475569; border-color:rgba(255,255,255,.6); }
+    .tab-idle:hover { background:#fff; }
+
+    /* ===== Tabela com cinza fraco + linhas ===== */
+    .grid-table{
+      border-collapse: separate;
+      border-spacing: 0;
+      background-color: #f8fafc; /* slate-50 */
+      width: 100%;
+      /* ===== ajustes novos p/ estreitar ===== */
+      table-layout: fixed;       /* deixa colunas mais estreitas e previsíveis */
+    }
+    .grid-table thead th{
+      background-color: rgba(255,255,255,.85);
+      backdrop-filter: saturate(1.2);
+    }
+    .grid-table th,
+    .grid-table td{
+      border-right: 1px solid #e2e8f0;     /* slate-200 */
+      border-bottom: 1px solid #e2e8f0;
+      overflow: hidden;                     /* evita estouro visual */
+      text-overflow: ellipsis;
+      vertical-align: top;
+    }
+    .grid-table tr > *:first-child{ border-left: 1px solid #e2e8f0; }
+    .grid-table thead tr:first-child th{ border-top: 1px solid #e2e8f0; }
+    .grid-table tbody tr:hover td{ background-color: #f1f5f9; } /* slate-100 hover */
+
+    /* reduzir padding da tabela (sobrepõe p-3) */
+    .grid-table th.p-3,
+    .grid-table td.p-3{ padding: .5rem .5rem; }
+
+    /* Larguras “fixas” (mais compactas) */
+    .grid-table td.col-solicitante{ width: 200px; }
+    .grid-table td.col-detalhes{ width: 280px; }
+    .grid-table td.col-status{ width: 160px; }
+
+    /* ==== Multiline clamp padrão (2–4 linhas) ==== */
+    .clamp-2, .clamp-3, .clamp-4{
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+    .clamp-2{ -webkit-line-clamp: 2; }
+    .clamp-3{ -webkit-line-clamp: 3; }
+    .clamp-4{ -webkit-line-clamp: 4; }
+
+    /* === POP: container fixo e previsível === */
+    .__pop {
+      position: fixed;             /* preso à viewport, não “escorrega” */
+      z-index: 60;
+      max-width: min(92vw, 480px);
+      width: min(92vw, 480px);
+    }
+
+    /* Coluna de Ações: permite o dropdown “sair” da célula */
+.grid-table td.col-acoes { position: relative; overflow: visible; width: 72px; }
+
+/* Botão de 3 pontinhos */
+.action-trigger{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:34px; height:30px; border:1px solid #e2e8f0; border-radius:10px;
+  background:#fff; transition:transform .15s ease, box-shadow .15s ease;
+}
+.action-trigger:hover{ transform:translateY(-1px); box-shadow:0 6px 14px rgba(2,8,23,.10); }
+
+/* Menu flutuante */
+.action-menu{
+  position:absolute; right:0; top:calc(100% + 6px); z-index:30;
+  min-width:160px; background:#fff; border:1px solid #e2e8f0; border-radius:12px;
+  box-shadow:0 16px 40px rgba(2,8,23,.18); padding:6px;
+}
+.action-menu.hidden{ display:none; }
+.action-item{
+  width:100%; text-align:left; border-radius:10px; font-weight:600;
+  padding:8px 10px; font-size:12px; display:flex; align-items:center; gap:8px;
+}
+.action-item:hover{ background:#f8fafc; }
+.action-item.aprovar{ color:#15803d; }   /* green-700 */
+.action-item.reprovar{ color:#b91c1c; }  /* red-700 */
+
+  
+  </style>
+</head>
+<body class="min-h-screen text-black antialiased" style="background: var(--cantina-secondary);">
+
+  <!-- ===== NAVBAR CANTINA (mesma do login) ===== -->
+  <nav class="cantina-nav" aria-label="Barra superior">
+    <div class="cantina-container">
+      <a class="brand" href="#">
+        <img src="https://iconecolegioecurso.com.br/wp-content/uploads/2022/08/xlogo_icone_site.png.pagespeed.ic_.QgXP3GszLC.webp"
+             alt="Logo Ícone Colégio e Curso"
+             onerror="this.onerror=null;this.src='https://placehold.co/150x50/eeeeee/333333?text=Logo';">
+        <span class="divider" aria-hidden="true"></span>
+        <span class="title">Aprovação de Compras</span>
+      </a>
+
+      <!-- Botão hamburguer (mobile) -->
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M3.75 5.25a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75Zm0 6a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75Zm0 6a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+
+      <!-- Ações -->
+      <div id="menuActions" class="actions">
+        <!-- Alterado: botão -> link para a pasta login -->
+        <a id="btnSair" class="btn" href="../index.html" rel="noopener">Sair</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTEÚDO -->
+  <main class="w-full max-w-7xl mx-auto px-4 pb-20 pt-6">
+    <div class="bg-[#F1663C] border border-white/60 rounded-xl sm:rounded-2xl shadow-2xl shadow-glow p-4 xs:p-5 sm:p-6 md:p-8">
+
+      <!-- Filtros -->
+      <div class="grid grid-cols-1 lg:grid-cols-6 gap-2 xs:gap-3">
+        <input id="fBusca" type="text" placeholder="Buscar por nome, e-mail, produto/serviço…" class="lg:col-span-2 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20" />
+        <select id="fStatus" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20">
+          <option value="">Status (todos)</option>
+          <option value="pendente">Pendente</option>
+          <option value="aprovado">Aprovado</option>
+          <option value="reprovado">Reprovado</option>
+        </select>
+        <select id="fUnidade" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20">
+          <option value="">Unidade (todas)</option>
+          <option value="1">Unidade 1</option>
+          <option value="2">Unidade 2</option>
+          <option value="3">Unidade 3</option>
+          <option value="4">Unidade 4</option>
+          <option value="5">Unidade 5</option>
+          <option value="6">Unidade 6</option>
+        </select>
+        <select id="fTipo" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20">
+          <option value="">Tipo (todos)</option>
+          <option value="servico">Serviço</option>
+          <option value="produto">Produto</option>
+        </select>
+        <select id="fUrgencia" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20">
+          <option value="">Urgência (todas)</option>
+          <option value="baixa">Baixa</option>
+          <option value="media">Média</option>
+          <option value="alta">Alta</option>
+          <option value="critica">Crítica</option>
+        </select>
+        <div class="flex flex-col xs:flex-row gap-2">
+          <button id="btnFiltrar" class="w-full xs:flex-1 rounded-lg bg-white px-3 py-2 text-sm font-semibold shadow hover:-translate-y-0.5 hover:shadow-md transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primaria/30">Aplicar</button>
+          <button id="btnLimpar" class="w-full xs:w-auto rounded-lg bg-white/80 px-3 py-2 text-sm font-semibold border border-white/60 hover:bg-white transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primaria/30">Limpar</button>
+        </div>
+      </div>
+
+      <!-- Top bar: contador + ações + tabs -->
+      <div class="mt-4 flex flex-col gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+          <div class="text-sm text-slate-800 order-2 sm:order-1">
+            <span id="contador"></span>
+          </div>
+          <div class="flex items-center gap-2 order-1 sm:order-2">
+            <button id="btnAtualizar" class="rounded-lg bg-white px-3 py-2 text-sm font-semibold shadow hover:-translate-y-0.5 hover:shadow-md transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primaria/30">Atualizar</button>
+          </div>
+        </div>
+
+        <!-- Tabs: Pendentes x Histórico -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="tabPendentes" class="tab-btn tab-active" data-tab="pendentes">Pendentes <span id="countPendentes" class="ml-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">0</span></button>
+          <button id="tabHistorico" class="tab-btn tab-idle" data-tab="historico">Histórico <span id="countHistorico" class="ml-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">0</span></button>
+        </div>
+      </div>
+
+      <!-- TABELA -->
+      <div class="mt-4 overflow-x-auto border border-slate-200/70 rounded-xl bg-slate-50">
+        <table class="min-w-full text-xs sm:text-sm grid-table">
+          <thead>
+            <tr class="text-left text-slate-700">
+              <th class="p-3 whitespace-nowrap">Enviado</th>
+              <th class="p-3">Solicitante</th>
+              <th class="p-3 hidden md:table-cell">Unidade</th>
+              <th class="p-3">Tipo</th>
+              <th class="p-3">Detalhes</th>
+              <th class="p-3 hidden sm:table-cell">Prazo</th>
+              <th class="p-3 hidden sm:table-cell">Urgência</th>
+              <th class="p-3 hidden lg:table-cell">Links</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody" class="bg-slate-50"></tbody>
+        </table>
+      </div>
+
+      <!-- PAGINAÇÃO -->
+      <div id="pager" class="mt-3 flex flex-wrap items-center justify-between gap-2 text-sm"></div>
+
+      <!-- MODAL APROVAÇÃO/REJEIÇÃO -->
+      <div id="modal" class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50 px-3">
+        <div class="w-full max-w-lg bg-white rounded-2xl p-4 sm:p-6 shadow-2xl">
+          <h3 id="modalTitulo" class="text-base sm:text-lg font-bold"></h3>
+
+          <div class="mt-2 flex items-start justify-between gap-3">
+            <p id="modalHelp" class="text-sm text-slate-600 flex-1">Você pode adicionar uma observação.</p>
+            <!-- TOGGLE NÃO JUSTIFICAR -->
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <span class="text-xs font-medium text-slate-700">Não justificar</span>
+              <div id="toggleNoJustify" class="relative inline-block w-11 h-6 bg-slate-300 rounded-full transition-colors duration-300">
+                <span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-300"></span>
+              </div>
+            </label>
+          </div>
+
+          <textarea id="modalObs" class="mt-3 w-full min-h[110px] rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20" placeholder="Escreva sua observação…"></textarea>
+
+          <div class="mt-1 flex items-center justify-between">
+            <span id="modalError" class="text-xs text-red-600 hidden">Informe o motivo da reprovação ou ative “Não justificar”.</span>
+            <span id="modalCount" class="text-xs text-slate-500"></span>
+          </div>
+
+          <div class="mt-4 flex flex-col xs:flex-row justify-end gap-2">
+            <button id="modalCancelar" class="rounded-lg border px-3 py-2 text-sm">Cancelar</button>
+            <button id="modalConfirmar" class="rounded-lg bg-primaria text-white px-3 py-2 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Confirmar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      const menuToggle  = document.getElementById('menuToggle');
+      const menuActions = document.getElementById('menuActions');
+
+      if(menuToggle && menuActions){
+        menuToggle.addEventListener('click', () => {
+          const isOpen = menuActions.classList.toggle('open');
+          menuToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        document.addEventListener('click', (e) => {
+          if(!menuActions.classList.contains('open')) return;
+          const clickedInside = menuActions.contains(e.target) || menuToggle.contains(e.target);
+          if(!clickedInside){
+            menuActions.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        window.addEventListener('resize', () => {
+          if(window.innerWidth > 640 && menuActions.classList.contains('open')){
+            menuActions.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+    })();
+  </script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+
+  // ======= CONFIGS =======
+  const firebaseConfig = {
+    apiKey: "AIzaSyAEZidq8mdAUKeJXvSQeE01gVOLWe_cp78",
+    authDomain: "compras-icone.firebaseapp.com",
+    projectId: "compras-icone",
+    storageBucket: "compras-icone.appspot.com",
+    messagingSenderId: "831706842201",
+    appId: "1:831706842201:web:9b68ae4f98ad93c5a99d48",
+  };
+
+  const ALLOWED_DOMAIN = 'icone.g12.br';
+  const ADMINS = new Set([
+    'samuel.colman@icone.g12.br',
+    'pedrolucas@icone.g12.br',
+    'filipemarques@icone.g12.br',
+  ].map(e => e.toLowerCase()));
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbym9i89FlX-rtpoeiEasIPVaOXIs2glkPTMNXWVu1U5jmfdbkYXMM2t-0ylPnllaJfh/exec';
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // LOGOUT de verdade no botão "Sair"
+const btnSair = document.getElementById('btnSair');
+if (btnSair) {
+  btnSair.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    // feedback opcional
+    btnSair.setAttribute('aria-busy', 'true');
+    btnSair.style.pointerEvents = 'none';
+    btnSair.textContent = 'Saindo…';
+
+    try {
+      await signOut(auth);
+      // limpa resíduos (opcional)
+      try { sessionStorage.clear(); } catch {}
+      try { localStorage.removeItem('firebase:host:*'); } catch {}
+    } finally {
+      // use caminho que faz sentido para seu projeto:
+      // se este arquivo está em /admin/, "../index.html" leva para a raiz
+      window.location.replace('../index.html');
+    }
+  });
+}
+
+
+  // ======= UTIL =======
+  const $  = (sel)=>document.querySelector(sel);
+  const $$ = (sel)=>Array.from(document.querySelectorAll(sel));
+
+  function toast(msg, type='info'){
+    const isSuccess = type==='success';
+    const isError   = type==='error';
+    Toastify({
+      text: msg, duration: 3200, close: true, gravity: 'top', position: 'right', stopOnFocus: true,
+      style: {
+        background: isSuccess ? 'linear-gradient(90deg,#16a34a,#22c55e)'
+                 : isError   ? 'linear-gradient(90deg,#dc2626,#ef4444)'
+                 : 'linear-gradient(90deg,#334155,#64748b)',
+        color:'#fff', fontWeight:'600', borderRadius:'10px', padding:'10px 16px',
+        boxShadow:'0 10px 25px -10px rgba(0,0,0,.35)'
+      }, offset: {x:8, y:10}
+    }).showToast();
+  }
+
+  function fmtDate(d){
+    if(!d) return '-';
+    const dt = new Date(d);
+    return isNaN(dt.getTime()) ? '-' : dt.toLocaleString('pt-BR');
+  }
+
+  function badgeStatus(s){
+    const base = 'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold border';
+    const map = {
+      pendente: 'bg-yellow-50 text-yellow-800 border-yellow-200',
+      aprovado: 'bg-green-50 text-green-800 border-green-200',
+      reprovado: 'bg-red-50 text-red-800 border-red-200'
+    };
+    return `<span class="${base} ${map[s]||'bg-slate-50 text-slate-700 border-slate-200'}">${(s||'pendente').toUpperCase()}</span>`;
+  }
+
+  const debounce = (fn, wait=250)=>{ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); }; };
+
+  // normaliza (remove acento/caixa) p/ busca
+  const norm = (s)=> String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+
+  function humanTipo(item){
+    if(item.tipo==='servico') return `Serviço`;
+    if(item.tipo==='produto') return `Produto`;
+    return '-';
+  }
+
+  // ======= ESTADO =======
+  let currentUser = null;
+  let dadosBrutos = [];     // recebido da planilha (todos)
+  let dadosFiltrados = [];  // filtrados da aba ativa
+  let activeTab = 'pendentes'; // 'pendentes' | 'historico'
+
+  // ======= AUTENTICAÇÃO ======= 
+  const isDomain = (email) => email?.toLowerCase().endsWith('@' + ALLOWED_DOMAIN);
+
+  onAuthStateChanged(auth, async (user) => {
+    const adminEmailEl = $('#adminEmail');
+
+    // 1) Precisa estar logado
+    if (!user) {
+      window.location.replace('./index.html');
+      return;
+    }
+
+    // 2) Precisa ser do domínio
+    if (!isDomain(user.email)) {
+      await signOut(auth).catch(()=>{});
+      window.location.replace('./index.html');
+      return;
+    }
+
+    // 3) Precisa estar na lista de admins
+    const isAdmin = ADMINS.has(user.email.toLowerCase());
+    if (!isAdmin) {
+      await signOut(auth).catch(()=>{});
+      alert('Acesso restrito a administradores.');
+      window.location.replace('./index.html');
+      return;
+    }
+
+    currentUser = user;
+    if (adminEmailEl) adminEmailEl.textContent = user.email;
+    carregarLista();
+  });
+
+  // ======= REDE ======= 
+  async function chamarAPI(url, opts={}){
+    try{
+      const resp = await fetch(url, opts);
+      if(resp.type==='opaque') return { ok:true, opaque:true };
+      const data = await resp.json().catch(()=>null);
+      return { ok: resp.ok && (data?.ok!==false), data };
+    }catch{
+      try{
+        await fetch(url, {...opts, mode:'no-cors'});
+        return { ok:true, opaque:true };
+      }catch(err){ return { ok:false, error: err?.message || String(err) }; }
+    }
+  }
+
+  async function carregarLista(){
+    $('#tbody').innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-600">Carregando…</td></tr>`;
+    const url = WEBAPP_URL + '?action=list';
+    const { ok, data, error } = await chamarAPI(url);
+    if(!ok){
+      $('#tbody').innerHTML = `<tr><td colspan="10" class="p-6 text-center text-red-700">Falha ao carregar (${error||'erro'}).</td></tr>`;
+      return;
+    }
+    dadosBrutos = Array.isArray(data?.items) ? data.items : [];
+    refreshCounters();
+    aplicarFiltrosERender(); // mantém filtros atuais e aba
+    toast('Lista atualizada', 'success');
+  }
+
+  async function atualizarStatus(submissionId, novoStatus, observacao=''){
+    const body = new URLSearchParams({
+      action: 'updateStatus',
+      submissionId,
+      status: novoStatus,
+      observacao,
+      aprovador: currentUser?.email || ''
+    });
+    const { ok, error } = await chamarAPI(WEBAPP_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}, body });
+    if(!ok) throw new Error(error||'Falha ao atualizar');
+  }
+
+  /* =======================
+     PAGINAÇÃO (3 por página)
+     ======================= */
+  let page = 1;
+  const pageSize = 3;
+
+  function getPageSlice(list){
+    const total = list.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if (page > totalPages) page = totalPages;
+    if (page < 1) page = 1;
+    const start = (page - 1) * pageSize;
+    return { rows: list.slice(start, start + pageSize), total, totalPages };
+  }
+
+  function goToPage(n){
+    page = n;
+    aplicarFiltrosERender(true); // mantém filtros/aba, só troca a página
+  }
+
+  function renderPaginacao(totalPages, total){
+    const el = document.getElementById('pager');
+    if (!el) return;
+
+    if (total <= pageSize){
+      el.innerHTML = `<div class="text-slate-600">${total} registro(s)</div>`;
+      return;
+    }
+
+    const mkBtn = (lbl, p, disabled=false, aria='') =>
+      `<button ${aria} ${disabled ? 'disabled' : ''} data-page="${p}"
+        class="px-2.5 py-1.5 rounded border text-sm font-semibold
+                ${disabled ? 'opacity-50 cursor-not-allowed' : 'bg-white hover:-translate-y-0.5 hover:shadow transition'}">
+        ${lbl}
+      </button>`;
+
+    const start = Math.max(1, page - 2);
+    const end   = Math.min(totalPages, start + 4);
+
+    const nums  = Array.from({length: end - start + 1}, (_,i)=> start+i).map(n=>{
+      const active = n===page;
+      return `<button data-page="${n}"
+                class="px-2.5 py-1.5 rounded border text-sm font-semibold
+                      ${active ? 'bg-primaria text-white border-primaria' : 'bg-white hover:-translate-y-0.5 hover:shadow transition'}">
+                ${n}
+              </button>`;
+    }).join('');
+
+    el.innerHTML = `
+      <div class="text-slate-600">Exibindo ${Math.min(page*pageSize, total)} de ${total}</div>
+      <div class="flex items-center gap-1">
+        ${mkBtn('‹ Anterior', page-1, page===1, 'aria-label="Página anterior"')}
+        ${nums}
+        ${mkBtn('Próxima ›', page+1, page===totalPages, 'aria-label="Próxima página"')}
+      </div>
+    `;
+
+    // listeners
+    el.querySelectorAll('button[data-page]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const p = parseInt(b.getAttribute('data-page'), 10);
+        if (!Number.isNaN(p)) goToPage(p);
+      });
+    });
+  }
+
+
+  // ======= FILTROS ======= 
+  function aplicaBusca(item, termo){
+    if(!termo) return true;
+    const hay = norm([
+      item.nome, item.email, item.nomeProduto, item.descricaoServico, item.quemIndicar,
+      item.unidade, item.urgencia, item.tipo
+    ].filter(Boolean).join(' '));
+    return hay.includes(norm(termo));
+  }
+
+  function inTab(item){
+    const st = String(item.status||'pendente');
+    return activeTab==='pendentes' ? (st==='pendente') : (st!=='pendente');
+    }
+
+  // ==== ESCAPE HTML (para usar em atributos/HTML seguros) ==== 
+  const esc = (s)=> String(s ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+  function aplicarFiltrosERender(keepPage=false){
+    if (!keepPage) page = 1;
+
+    const q  = $('#fBusca').value.trim();
+    const st = $('#fStatus').value;      // aplicado só no histórico
+    const un = $('#fUnidade').value;
+    const tp = $('#fTipo').value;
+    const ur = $('#fUrgencia').value;
+
+    dadosFiltrados = dadosBrutos.filter(it=>
+      inTab(it) &&
+      aplicaBusca(it, q) &&
+      // Status: na aba Pendentes ignoramos o filtro de status; na aba Histórico respeitamos se definido
+      (activeTab==='pendentes' || !st || (String(it.status||'pendente')===st)) &&
+      (!un || String(it.unidade)===String(un)) &&
+      (!tp || String(it.tipo)===String(tp)) &&
+      (!ur || String(it.urgencia)===String(ur))
+    ).sort((a,b)=> new Date(b.timestamp||0) - new Date(a.timestamp||0));
+
+    const { rows, total, totalPages } = getPageSlice(dadosFiltrados);
+    renderTabela(rows);
+    renderPaginacao(totalPages, total);
+
+    $('#contador').textContent = `${total} registro(s) ${activeTab==='pendentes' ? 'pendente(s)' : 'no histórico'}`;
+    refreshCounters();
+  }
+
+  function refreshCounters(){
+    const pend = dadosBrutos.filter(x=>String(x.status||'pendente')==='pendente').length;
+    const hist = dadosBrutos.filter(x=>String(x.status||'pendente')!=='pendente').length;
+    $('#countPendentes').textContent = pend;
+    $('#countHistorico').textContent = hist;
+  }
+
+  // ======= TABELA ======= 
+  function parseLinks(links){
+    if(Array.isArray(links)) return links;
+    if(typeof links==='string'){
+      try{ const j = JSON.parse(links); return Array.isArray(j)? j : []; }catch{ /* */ }
+      return links.split(/\s+/).filter(Boolean);
+    }
+    return [];
+  }
+
+function renderTabela(lista){
+  const tbody = $('#tbody');
+  if(!lista.length){
+    tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-600">Nenhum registro encontrado.</td></tr>`;
+    return;
+  }
+
+  const popDetalhes = (it)=>{
+    if(it.tipo==='produto'){
+      return `
+        <div class="space-y-2">
+          <div class="text-xs uppercase tracking-wide text-slate-500">Produto</div>
+          <div class="font-semibold">${esc(it.nomeProduto||'-')}</div>
+          <div class="text-sm">Quantidade: <span class="font-medium">${esc(it.quantidadeProduto||'-')}</span></div>
+          ${it.observacao ? `<div class="text-sm"><span class="text-slate-500">Obs:</span> ${esc(it.observacao)}</div>`:''}
+        </div>`;
+    }else{
+      return `
+        <div class="space-y-2">
+          <div class="text-xs uppercase tracking-wide text-slate-500">Serviço</div>
+          <div class="font-semibold break-words">${esc(it.descricaoServico||'-')}</div>
+          ${it.quemIndicar ? `<div class="text-sm"><span class="text-slate-500">Indicação:</span> ${esc(it.quemIndicar)}</div>`:''}
+          ${it.observacao ? `<div class="text-sm"><span class="text-slate-500">Obs:</span> ${esc(it.observacao)}</div>`:''}
+        </div>`;
+    }
+  };
+
+  const popLinks = (arr)=>{
+    if(!arr.length) return `<div class="text-sm text-slate-600">Sem links.</div>`;
+    return `
+      <div class="space-y-2">
+        <div class="text-xs uppercase tracking-wide text-slate-500">Links</div>
+        <ul class="list-disc pl-5 space-y-1">
+          ${arr.map((l,i)=>`<li class="break-all"><a class="underline text-primaria" href="${l}" target="_blank" rel="noopener">Link ${i+1}</a></li>`).join('')}
+        </ul>
+      </div>`;
+  };
+
+  tbody.innerHTML = lista.map(item=>{
+    const links = parseLinks(item.links);
+    const prazoStr = (item.prazo==='sim' && item.dataPrazo) ? fmtDate(item.dataPrazo) : '-';
+
+    const showActions = (String(item.status||'pendente')==='pendente');
+
+    const acoes = showActions ? `
+      <div class="relative inline-block">
+        <button class="action-trigger" aria-haspopup="true" aria-expanded="false"
+                data-menu="menu-${item.submissionId}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 12a2 2 0 1 1-4 0a2 2 0 0 1 4 0m8 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0m8 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"/>
+          </svg>
+        </button>
+        <div id="menu-${item.submissionId}" class="action-menu hidden">
+          <button class="action-item aprovar" data-act="aprovar" data-id="${item.submissionId}">
+            ✓ Aprovar
+          </button>
+          <button class="action-item reprovar" data-act="reprovar" data-id="${item.submissionId}">
+            ✕ Reprovar
+          </button>
+        </div>
+      </div>
+    ` : `<div class='text-xs text-slate-500'>—</div>`;
+
+    const btnDetalhes = `
+      <button type="button" class="js-pop inline-flex text-left hover:bg-orange-50/50 rounded px-1 -mx-1 transition"
+        data-pop-title="Detalhes"
+        data-pop-content="${encodeURIComponent(popDetalhes(item))}">
+        ${item.tipo==='produto'
+          ? `<div class="font-semibold clamp-3">${esc(item.nomeProduto||'-')}</div>`
+          : `<div class="font-semibold clamp-3">${esc(item.descricaoServico||'-')}</div>`}
+      </button>`;
+
+    const btnLinks = `
+      <button type="button" class="js-pop underline decoration-dotted text-primaria"
+        data-pop-title="Links"
+        data-pop-content="${encodeURIComponent(popLinks(links))}">
+        ${links.length ? `${links.length} link(s)` : '-'}
+      </button>`;
+
+    return `<tr class='align-top'>
+      <td class='p-3 whitespace-nowrap text-slate-700'>${fmtDate(item.timestamp)}</td>
+      <td class='p-3 col-solicitante'>
+        <div class='font-semibold'>${esc(item.nome||'-')}</div>
+        <div class='text-[11px] sm:text-xs text-slate-600 break-all'>${esc(item.email||'-')}</div>
+      </td>
+      <td class='p-3 hidden md:table-cell'>U${esc(item.unidade||'-')}</td>
+      <td class='p-3'>${humanTipo(item)}</td>
+      <td class='p-3 col-detalhes'>${btnDetalhes}</td>
+      <td class='p-3 whitespace-nowrap hidden sm:table-cell'>${prazoStr}</td>
+      <td class='p-3 uppercase hidden sm:table-cell'>${(item.urgencia||'-')}</td>
+      <td class='p-3 hidden lg:table-cell'>${btnLinks}</td>
+      <td class='p-3 col-status'>${badgeStatus(item.status||'pendente')}</td>
+      <td class='p-3 col-acoes'>${acoes}</td>
+    </tr>`;
+  }).join('');
+
+  /* ========= LISTENERS ========= */
+
+  // abre/fecha menus
+  tbody.querySelectorAll('.action-trigger').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      document.querySelectorAll('.action-menu').forEach(m=>m.classList.add('hidden'));
+      const menuId = btn.getAttribute('data-menu');
+      const menuEl = document.getElementById(menuId);
+      menuEl?.classList.toggle('hidden');
+    });
+  });
+
+  // fecha menu ao clicar fora
+  document.addEventListener('click', ()=> {
+    document.querySelectorAll('.action-menu').forEach(m=>m.classList.add('hidden'));
+  });
+
+  // ação: abrir modal
+  tbody.querySelectorAll('button[data-act]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.action-menu').forEach(m=>m.classList.add('hidden'));
+      const id  = btn.getAttribute('data-id');
+      const act = btn.getAttribute('data-act');
+      abrirModal(id, act);
+    });
+  });
+
+  // popovers
+  tbody.querySelectorAll('.js-pop').forEach(bindPopoverTrigger);
+}
+
+  // ======= MODAL ======= 
+  let modalState = { id:null, act:null, noJustify:false };
+
+  function updateNoJustifyUI(){
+    const sw  = $('#toggleNoJustify');
+    const ta  = $('#modalObs');
+    const errorEl = $('#modalError');
+    const isOn = modalState.noJustify;
+
+    if (isOn) sw.classList.add('active'); else sw.classList.remove('active');
+
+    if(isOn){
+      ta.value = '';
+      ta.setAttribute('disabled','true');
+      ta.classList.add('bg-slate-100','cursor-not-allowed','opacity-70');
+      errorEl.classList.add('hidden');
+      $('#modalCount').textContent = '';
+    }else{
+      ta.removeAttribute('disabled');
+      ta.classList.remove('bg-slate-100','cursor-not-allowed','opacity-70');
+    }
+  }
+
+  function abrirModal(id, act){
+    modalState = { id, act, noJustify:false };
+    $('#modalTitulo').textContent = act==='aprovar' ? 'Confirmar aprovação' : 'Confirmar reprovação';
+    $('#modalHelp').textContent = 'Você pode adicionar uma observação.';
+    $('#modalObs').value='';
+    $('#modalError').classList.add('hidden');
+    $('#modalConfirmar').disabled = false;
+    $('#toggleNoJustify')?.classList.remove('active');
+
+    updateNoJustifyUI();
+
+    $('#modal').classList.remove('hidden');
+    $('#modal').classList.add('flex');
+    setTimeout(()=> $('#modalObs').focus(), 0);
+  }
+
+  function fecharModal(){
+    $('#modal').classList.add('hidden');
+    $('#modal').classList.remove('flex');
+    modalState = { id:null, act:null, noJustify:false };
+  }
+
+  $('#modalCancelar').addEventListener('click', fecharModal);
+  $('#modal').addEventListener('click', (e)=>{ if(e.target.id==='modal') fecharModal(); });
+
+  const toggleNoJustify = document.getElementById('toggleNoJustify');
+  if (toggleNoJustify) {
+    toggleNoJustify.addEventListener('click', () => {
+      modalState.noJustify = !modalState.noJustify;
+      updateNoJustifyUI();
+    });
+  }
+
+  // contador + feedback ao digitar
+  $('#modalObs').addEventListener('input', ()=>{
+    const txt = $('#modalObs').value;
+    const len = txt.trim().length;
+    $('#modalCount').textContent = len ? `${len} caractere(s)` : '';
+    if(len>0) $('#modalError').classList.add('hidden');
+  });
+
+  $('#modalConfirmar').addEventListener('click', async ()=>{
+    const { id, act, noJustify } = modalState; if(!id||!act) return;
+
+    const obs = noJustify ? '' : $('#modalObs').value.trim();
+
+    if(act==='reprovar' && !noJustify && !obs){
+      $('#modalError').classList.remove('hidden');
+      $('#modalObs').focus();
+      return;
+    }
+
+    try{
+      await atualizarStatus(id, act==='aprovar' ? 'aprovado' : 'reprovado', obs);
+
+      const alvo = dadosBrutos.find(x=>x.submissionId===id);
+      if(alvo){
+        alvo.status = act==='aprovar' ? 'aprovado' : 'reprovado';
+        alvo.observacao = obs;
+        alvo.aprovadoPor = currentUser?.email || '';
+        alvo.aprovadoEm = new Date().toISOString();
+      }
+
+      // Ao aprovar/reprovar, o item sai automaticamente da aba Pendentes e passa ao Histórico
+      refreshCounters();
+      aplicarFiltrosERender();
+      toast(act==='aprovar' ? 'Aprovado!' : 'Reprovado!', 'success');
+    }catch(err){
+      toast('Não foi possível atualizar: '+(err?.message||err), 'error');
+    }finally{
+      fecharModal();
+    }
+  });
+
+  // ======= CONTROLES ======= 
+  const aplicarFiltrosDebounced = debounce(aplicarFiltrosERender, 250);
+
+  // Busca: aplica ao digitar (debounce) e Enter aplica na hora
+  $('#fBusca').addEventListener('input', aplicarFiltrosDebounced);
+  $('#fBusca').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); aplicarFiltrosERender(); } });
+
+  // Selects: aplicam automaticamente ao mudar
+  ['#fStatus','#fUnidade','#fTipo','#fUrgencia'].forEach(sel=>{ $(sel).addEventListener('change', aplicarFiltrosERender); });
+
+  // Botões
+  $('#btnFiltrar').addEventListener('click', aplicarFiltrosERender);
+  $('#btnLimpar').addEventListener('click', ()=>{
+    $('#fBusca').value='';
+    $('#fStatus').value='';
+    $('#fUnidade').value='';
+    $('#fTipo').value='';
+    $('#fUrgencia').value='';
+    aplicarFiltrosERender();
+  });
+  $('#btnAtualizar').addEventListener('click', carregarLista);
+
+  // ======= Tabs ======= 
+  function setTab(tab){
+    activeTab = tab;
+    const p = $('#tabPendentes'), h = $('#tabHistorico');
+    if(tab==='pendentes'){
+      p.classList.add('tab-active'); p.classList.remove('tab-idle');
+      h.classList.add('tab-idle');   h.classList.remove('tab-active');
+      // ao ver pendentes, ignoramos filtro de status (sempre pendente)
+      if($('#fStatus').value==='pendente') $('#fStatus').value='';
+    }else{
+      h.classList.add('tab-active'); h.classList.remove('tab-idle');
+      p.classList.add('tab-idle');   p.classList.remove('tab-active');
+    }
+    aplicarFiltrosERender();
+  }
+  $('#tabPendentes').addEventListener('click', ()=> setTab('pendentes'));
+  $('#tabHistorico').addEventListener('click', ()=> setTab('historico'));
+
+  /* =======================
+     Popover – utilitário
+     ======================= */
+  let popEl, popTitleEl, popBodyEl, popPinnedBy = null, hoverTimer=null;
+
+  function ensurePopover(){
+    if(popEl) return popEl;
+    popEl = document.createElement('div');
+    // classe __pop garante position:fixed + largura previsível (ver CSS)
+    popEl.className = '__pop bg-white rounded-xl shadow-2xl border border-slate-200 p-3 sm:p-4 transition opacity-0 pointer-events-none';
+    popEl.innerHTML = `
+      <div class="flex items-start justify-between gap-3">
+        <div id="__pop_title" class="text-sm font-semibold"></div>
+        <button type="button" id="__pop_close" class="rounded-md p-1 text-slate-500 hover:bg-slate-100" aria-label="Fechar">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293A1 1 0 1115.707 5.707L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+      </div>
+      <div id="__pop_body" class="mt-2 text-sm text-slate-700"></div>
+    `;
+    document.body.appendChild(popEl);
+    popTitleEl = popEl.querySelector('#__pop_title');
+    popBodyEl  = popEl.querySelector('#__pop_body');
+    popEl.querySelector('#__pop_close').addEventListener('click', ()=> hidePopover());
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') hidePopover(); });
+    window.addEventListener('scroll', ()=>{ if(!popPinnedBy) hidePopover(); }, true);
+    window.addEventListener('resize', ()=>{ if(!popPinnedBy) hidePopover(); });
+    return popEl;
+  }
+
+  function showPopoverFor(trigger){
+    ensurePopover();
+    const title = trigger.getAttribute('data-pop-title') || '';
+    const content = decodeURIComponent(trigger.getAttribute('data-pop-content')||'');
+    popTitleEl.textContent = title;
+    popBodyEl.innerHTML = content;
+
+    positionPopover(trigger);
+    popEl.style.opacity = '1';
+    popEl.style.pointerEvents = 'auto';
+  }
+
+  function positionPopover(trigger){
+    const rect = trigger.getBoundingClientRect();
+    const pad  = 8;
+    const vw   = window.innerWidth;
+    const vh   = window.innerHeight;
+
+    // prepara para medir sem piscar
+    popEl.style.opacity = '0';
+    popEl.style.pointerEvents = 'none';
+    popEl.style.top = '-9999px';
+    popEl.style.left = '-9999px';
+
+    requestAnimationFrame(()=>{
+      const pw = popEl.offsetWidth;
+      const ph = popEl.offsetHeight;
+
+      // Preferência: ACIMA do trigger
+      let top  = rect.top - ph - 8;
+      let left = rect.left;
+
+      // Se não couber acima, coloca ABAIXO
+      if (top < pad){
+        top = rect.bottom + 8;
+        // e se também não couber abaixo, força dentro da viewport
+        if (top + ph + pad > vh){
+          top = Math.max(pad, vh - ph - pad);
+        }
+      }
+
+      // Ajuste horizontal dentro da viewport
+      if (left + pw + pad > vw) left = Math.max(pad, vw - pw - pad);
+      if (left < pad) left = pad;
+
+      // Como é fixed, não somamos scroll
+      popEl.style.left = `${left}px`;
+      popEl.style.top  = `${top}px`;
+      popEl.style.opacity = '1';
+      popEl.style.pointerEvents = 'auto';
+    });
+  }
+
+  function hidePopover(){
+    if(!popEl) return;
+    popEl.style.opacity = '0';
+    popEl.style.pointerEvents = 'none';
+    popPinnedBy = null;
+  }
+
+  function bindPopoverTrigger(el){
+    el.addEventListener('mouseenter', ()=>{
+      if(popPinnedBy) return;
+      clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(()=> showPopoverFor(el), 150);
+    });
+    el.addEventListener('mouseleave', ()=>{
+      clearTimeout(hoverTimer);
+      if(!popPinnedBy) hidePopover();
+    });
+
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const isSame = popPinnedBy === el;
+      if(isSame){
+        popPinnedBy = null;
+        hidePopover();
+      }else{
+        popPinnedBy = el;
+        showPopoverFor(el);
+      }
+    });
+  }
+
+  document.addEventListener('click', (e)=>{
+    if(!popEl) return;
+    if(popPinnedBy) {
+      const clickedInsidePop = popEl.contains(e.target);
+      const clickedTrigger   = popPinnedBy.contains(e.target);
+      if(!clickedInsidePop && !clickedTrigger){
+        popPinnedBy = null;
+        hidePopover();
+      }
+    }else{
+      const clickedInsidePop = popEl.contains(e.target);
+      if(!clickedInsidePop) hidePopover();
+    }
+  });
+
+  // Inicial: carregar via auth -> carregarLista(); setTab já está 'pendentes'
+</script>
+
+</body>
+</html>

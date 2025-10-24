@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Login</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Inter (navbar + página) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="shortcut icon" href="https://storage.googleapis.com/ecdt-logo-saida/1ebe52af502e25d3521cb9dad62bb72f6bc1c347353cdda5fa381ef8627a9eb8/COLEGIO-E-CURSO-ICONE.webp" type="image/x-icon">
+
+  <style>
+    /* ===== Variáveis (inclui as do header Cantina) ===== */
+    :root{
+      --brand:#F1663C;        /* laranja Ícone (já usado no card do login) */
+      --white:#FFFFFF;
+      --ok:#22c55e;
+      --danger:#ef4444;
+
+      /* Cantina */
+      --cantina-primary:#FD7F08;
+      --cantina-secondary:#253237; /* fundo da página */
+      --cantina-text:#FD7F08;
+      --cantina-border:#e2e8f0;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    /* ===== Body agora com o mesmo fundo do formulário ===== */
+    body{
+      margin:0;
+      background:var(--cantina-secondary);
+      color:#fff;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      min-height:100vh;
+
+      /* centraliza o conteúdo verticalmente, respeitando o header fixo */
+      display:flex; flex-direction:column;
+    }
+
+    /* ===== Header Cantina (mesmo layout/estilo da 1ª página) ===== */
+    nav.cantina-nav{
+      position:sticky; top:0; z-index:50;
+      background:var(--cantina-secondary);
+      border-bottom:3px solid var(--cantina-primary);
+      color:var(--cantina-text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    nav.cantina-nav .cantina-container{
+      max-width:min(98vw, 1400px); margin:0 auto; padding:0 12px;
+      height:96px; display:flex; align-items:center; justify-content:space-between;
+    }
+    nav.cantina-nav a{ display:flex; align-items:center; text-decoration:none; }
+    nav.cantina-nav img{ height:64px; width:auto; }
+    nav.cantina-nav .brand{ display:flex; align-items:center; gap:12px; color:var(--cantina-text); height:100%; }
+    nav.cantina-nav .brand .divider{ width:2px; height:70%; align-self:center; background:var(--cantina-primary); border-radius:2px; }
+    nav.cantina-nav .brand .title{
+      font-weight:800; letter-spacing:.5px;
+      font-size:clamp(18px, 3.8vw, 32px);
+      line-height:1.15; white-space:normal; word-break:keep-all;
+      color:var(--cantina-text);
+      text-transform:uppercase;
+    }
+    nav.cantina-nav .actions{ display:flex; gap:8px; flex-wrap:wrap; }
+    nav.cantina-nav .btn{
+      padding:10px 12px; border-radius:12px; border:1px solid var(--cantina-border);
+      background:#fff; color:#000; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease;
+      font-weight:600;
+    }
+    nav.cantina-nav .btn:hover{ transform:translateY(-1px); box-shadow:0 2px 10px rgba(2,8,23,.06); }
+    nav.cantina-nav .menu-toggle{
+      display:none; border:1px solid var(--cantina-border);
+      background:#fff; color:#000; border-radius:10px;
+      padding:8px; cursor:pointer;
+    }
+    nav.cantina-nav .menu-toggle:focus-visible,
+    nav.cantina-nav .btn:focus-visible{
+      outline:2px solid var(--cantina-primary);
+      outline-offset:2px;
+    }
+
+    /* Mobile header */
+    @media (max-width: 640px){
+      nav.cantina-nav .cantina-container{ height:72px; position:relative; }
+      nav.cantina-nav img{ height:48px; }
+      nav.cantina-nav .brand{ flex:1; min-width:0; }
+      nav.cantina-nav .menu-toggle{
+        display:inline-flex; align-items:center; justify-content:center;
+        width:40px; height:40px; padding:6px; border-radius:10px;
+      }
+      nav.cantina-nav .menu-toggle svg{ width:18px; height:18px; }
+      nav.cantina-nav .actions{
+        position:absolute; right:12px; top:calc(100% + 8px); z-index:60;
+        display:none; flex-direction:column; gap:6px;
+        background:#ffffff; border:1px solid var(--cantina-border); border-radius:12px;
+        padding:10px; width:min(78vw, 280px); box-shadow:0 12px 30px rgba(2,8,23,.18);
+      }
+      nav.cantina-nav .actions.open{ display:flex; }
+      nav.cantina-nav .actions .btn{ width:100%; justify-content:center; }
+    }
+    @media (max-width: 400px){
+      nav.cantina-nav .brand .title{ font-size:clamp(16px, 5vw, 22px); }
+    }
+
+    /* ===== Layout do conteúdo central (login) ===== */
+    .page{
+      flex:1;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:24px 12px 48px;
+    }
+
+    .logo-top { margin-bottom: 24px; text-align: center; }
+    .logo-top img { height: 130px; filter: drop-shadow(0 8px 20px rgba(241,102,60,.25)); }
+
+    .card {
+      background-color: var(--brand);
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      color: var(--white);
+    }
+
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 24px; color: var(--white); }
+
+    .google-btn {
+      width: 100%; padding: 14px; border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 600; color: var(--brand); background: var(--white);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .google-btn:hover { filter: brightness(0.95); transform: translateY(-1px); }
+
+    .google-icon { width: 20px; height: 20px; }
+
+    .notice { font-size: 13px; margin-top: 16px; color: var(--white); min-height: 18px; }
+    .ok { color: var(--ok); }
+    .err { color: var(--danger); }
+
+    .profile {
+      display: none; align-items: center; justify-content: space-between;
+      background: rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 14px;
+      margin-top: 18px; color: var(--white);
+    }
+    .avatar {
+      height: 40px; width: 40px; border-radius: 50%; object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.4);
+    }
+    .signout {
+      background: none; border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px; color: var(--white); padding: 6px 12px; cursor: pointer;
+    }
+
+    .legal { color: var(--white); font-size: 12px; margin-top: 20px; }
+    .legal a { color: var(--white); text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header (idêntico ao da página de formulário) ===== -->
+  <nav class="cantina-nav" aria-label="Barra superior">
+    <div class="cantina-container">
+      <a class="brand" href="#">
+        <img src="https://iconecolegioecurso.com.br/wp-content/uploads/2022/08/xlogo_icone_site.png.pagespeed.ic_.QgXP3GszLC.webp"
+             alt="Logo Ícone Colégio e Curso"
+             onerror="this.onerror=null;this.src='https://placehold.co/150x50/eeeeee/333333?text=Logo';">
+        <span class="divider" aria-hidden="true"></span>
+        <span class="title">Formulário de Compras</span>
+      </a>
+
+      <!-- Ações (mantido vazio no login; você pode adicionar links se quiser) -->
+      <div id="menuActions" class="actions"></div>
+    </div>
+  </nav>
+
+  <!-- ===== Conteúdo da página (centralizado) ===== -->
+  <div class="page">
+    <main class="card">
+      <h1>Área de Acesso</h1>
+
+      <!-- Botão que inicia o login -->
+      <button id="googleBtn" class="google-btn">
+        <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#FFC107" d="M44.5 20H24v8.5h11.8C34.9 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.2-6.2C34.5 4.5 29.5 2.5 24 2.5 12.2 2.5 2.5 12.2 2.5 24S12.2 45.5 24 45.5 45.5 35.8 45.5 24c0-1.4-.1-2.7-.4-4z"/>
+          <path fill="#34A853" d="M6.3 33.3l7-5.4C15.1 31.9 19.5 34 24 34c4 0 7.5-1.4 10.2-3.8l6.9 5.6C38.5 40.6 31.9 43.5 24 43.5 14.8 43.5 7.2 38.8 6.3 33.3z"/>
+          <path fill="#EA4335" d="M34.2 19.3C33 16.4 29.5 14 24 14c-4.7 0-8.7 2.9-10.7 6.3l-7-5.1C9.2 7.2 16 2.5 24 2.5c5.5 0 10.5 2 14.1 5.7l-6 5.1z"/>
+          <path fill="#4285F4" d="M44.5 24c0-1.4-.1-2.7-.4-4H24v8.5h11.8c-.6 3.6-2.3 6.2-4.7 8.1l6.9 5.6c4-3.7 6.5-9.2 6.5-16.2z"/>
+        </svg>
+        Entrar com Google
+      </button>
+
+      <a id="goForms" class="google-btn" href="../forms/index.html" style="display:none; margin-top:12px;">Ir para os formulários</a>
+
+      <div id="notice" class="notice"></div>
+
+      <div id="profile" class="profile">
+        <img id="avatar" class="avatar" alt="Foto do usuário" />
+        <span id="displayName"></span>
+        <button id="signOutBtn" class="signout">Sair</button>
+      </div>
+
+      <p class="legal">
+        Ao continuar, você concorda com nossos <a href="#">Termos</a> e <a href="#">Política de Privacidade</a>.
+      </p>
+    </main>
+  </div>
+
+  <!-- ===== Toggle do menu (mesmo comportamento da 1ª página) ===== -->
+  <script>
+    (function(){
+      const menuToggle = document.getElementById('menuToggle');
+      const menuActions = document.getElementById('menuActions');
+
+      if(menuToggle && menuActions){
+        menuToggle.addEventListener('click', () => {
+          const isOpen = menuActions.classList.toggle('open');
+          menuToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        document.addEventListener('click', (e) => {
+          if(!menuActions.classList.contains('open')) return;
+          const clickedInside = menuActions.contains(e.target) || menuToggle.contains(e.target);
+          if(!clickedInside){
+            menuActions.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        window.addEventListener('resize', () => {
+          if(window.innerWidth > 640 && menuActions.classList.contains('open')){
+            menuActions.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+    })();
+  </script>
+
+  <!-- ===== Firebase Script ===== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signInWithRedirect,
+      getRedirectResult,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAEZidq8mdAUKeJXvSQeE01gVOLWe_cp78",
+      authDomain: "compras-icone.firebaseapp.com",
+      projectId: "compras-icone",
+      storageBucket: "compras-icone.firebasestorage.app",
+      messagingSenderId: "831706842201",
+      appId: "1:831706842201:web:9b68ae4f98ad93c5a99d48",
+    };
+
+    const ALLOWED_DOMAIN = 'icone.g12.br';
+    const FORMS_URL = '/forms/';
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    auth.languageCode = 'pt';
+
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account", hd: ALLOWED_DOMAIN });
+
+    const googleBtn = document.getElementById('googleBtn');
+    const goFormsLink = document.getElementById('goForms');
+    const profile = document.getElementById('profile');
+    const avatar = document.getElementById('avatar');
+    const displayName = document.getElementById('displayName');
+    const notice = document.getElementById('notice');
+    const signOutBtn = document.getElementById('signOutBtn');
+
+    const isAllowedEmail = (email) => email?.toLowerCase().endsWith('@' + ALLOWED_DOMAIN);
+
+    function showMsg(text, type = '') {
+      notice.textContent = text || '';
+      notice.className = 'notice' + (type ? ' ' + type : '');
+    }
+
+    function friendlyError(code, message) {
+      switch (code) {
+        case 'auth/popup-blocked': return 'Popup bloqueado. Tente novamente ou use outro navegador.';
+        case 'auth/popup-closed-by-user': return 'Popup fechado antes de concluir.';
+        case 'auth/cancelled-popup-request': return 'Tentativa de login cancelada.';
+        case 'auth/account-exists-with-different-credential':
+          return 'Essa conta já existe com outra forma de login.';
+        default: return message || 'Falha no login.';
+      }
+    }
+
+    // Navegação via HREF (sem window.location.replace)
+    function goToForms() {
+      if (goFormsLink) {
+        goFormsLink.click(); // usa o href real
+      } else {
+        location.href = FORMS_URL; // fallback
+      }
+    }
+
+    googleBtn.addEventListener('click', async () => {
+      showMsg('');
+      googleBtn.disabled = true;
+      googleBtn.style.opacity = '0.7';
+
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        if (!isAllowedEmail(user.email)) {
+          await signOut(auth);
+          showMsg('Acesso negado. Use sua conta @' + ALLOWED_DOMAIN, 'err');
+        } else {
+          showMsg('Login realizado com sucesso!', 'ok');
+          goToForms();
+        }
+      } catch (e) {
+        if (e?.code === 'auth/popup-blocked') {
+          try {
+            await signInWithRedirect(auth, provider);
+            return;
+          } catch (e2) {
+            showMsg(friendlyError(e2.code, e2.message), 'err');
+          }
+        } else {
+          showMsg(friendlyError(e.code, e.message), 'err');
+        }
+      } finally {
+        googleBtn.disabled = false;
+        googleBtn.style.opacity = '1';
+      }
+    });
+
+    signOutBtn.addEventListener('click', async () => {
+      await signOut(auth);
+      profile.style.display='none';
+      googleBtn.style.display='flex';
+      if (goFormsLink) goFormsLink.style.display = 'none';
+    });
+
+    getRedirectResult(auth).then((result) => {
+      if (!result) return;
+      const user = result.user;
+      if (!user) return;
+
+      if (!isAllowedEmail(user.email)) {
+        signOut(auth);
+        showMsg('Acesso negado. Use sua conta @' + ALLOWED_DOMAIN, 'err');
+      } else {
+        showMsg('Login realizado com sucesso!', 'ok');
+        goToForms();
+      }
+    }).catch(e => {
+      showMsg(friendlyError(e.code, e.message), 'err');
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user && isAllowedEmail(user.email)) {
+        // Se o usuário já está autenticado e permitido, manda para /forms/
+        goToForms();
+        return;
+      }
+      if (user) {
+        if (!isAllowedEmail(user.email)) { signOut(auth); return; }
+        profile.style.display='flex';
+        googleBtn.style.display='none';
+        if (goFormsLink) goFormsLink.style.display = 'flex';
+        avatar.src = user.photoURL || '';
+        displayName.textContent = user.displayName || user.email || '';
+      } else {
+        profile.style.display='none';
+        googleBtn.style.display='flex';
+        if (goFormsLink) goFormsLink.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Formulário - Ícone Colégio e Curso</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Poppins (form) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Inter (navbar Cantina) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <link rel="shortcut icon" href="https://storage.googleapis.com/ecdt-logo-saida/1ebe52af502e25d3521cb9dad62bb72f6bc1c347353cdda5fa381ef8627a9eb8/COLEGIO-E-CURSO-ICONE.webp" type="image/x-icon">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Toastify -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primaria: '#F1663C' },
+          boxShadow: { glow: '0 0 0 3px rgba(241,102,60,0.15), 0 10px 25px -5px rgba(0,0,0,0.25)' },
+          screens: { xs: '380px' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+  /* ===== Base ===== */
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Poppins, Arial, sans-serif;
+    color: #000;
+  }
+  * { color: #000; }
+  .toastify, .toastify * { color: #fff !important; }
+  .toastify .toast-close { color: #fff !important; opacity: 0.9; }
+
+  /* ===== Header Cantina (escopo isolado) ===== */
+  :root{
+    --cantina-primary:#FD7F08;
+    --cantina-secondary:#253237;
+    --cantina-text:#FD7F08;
+    --cantina-border:#e2e8f0;
+  }
+  nav.cantina-nav{
+    position:sticky; top:0; z-index:50;
+    background:var(--cantina-secondary);
+    border-bottom:3px solid var(--cantina-primary);
+    color:var(--cantina-text);
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  }
+  nav.cantina-nav .cantina-container{
+    max-width:min(98vw, 1400px); margin:0 auto; padding:0 12px;
+    height:96px; display:flex; align-items:center; justify-content:space-between;
+  }
+  nav.cantina-nav a{ display:flex; align-items:center; text-decoration:none; }
+  nav.cantina-nav img{ height:64px; width:auto; }
+  nav.cantina-nav .brand{ display:flex; align-items:center; gap:12px; color:var(--cantina-text); height:100%; }
+  nav.cantina-nav .brand .divider{ width:2px; height:70%; align-self:center; background:var(--cantina-primary); border-radius:2px; }
+  nav.cantina-nav .brand .title{
+    font-weight:800; letter-spacing:.5px;
+    font-size:clamp(18px, 3.8vw, 32px);
+    line-height:1.15;
+    white-space:normal; word-break:keep-all;
+  }
+  nav.cantina-nav .actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  nav.cantina-nav .btn{
+    padding:10px 12px; border-radius:12px; border:1px solid var(--cantina-border);
+    background:#fff; color:#000; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease;
+    font-weight:600;
+  }
+  nav.cantina-nav .btn:hover{ transform:translateY(-1px); box-shadow:0 2px 10px rgba(2,8,23,.06); }
+  nav.cantina-nav .menu-toggle{
+    display:none;
+    border:1px solid var(--cantina-border);
+    background:#fff; color:#000; border-radius:10px;
+    padding:8px; cursor:pointer;
+  }
+  nav.cantina-nav .menu-toggle:focus-visible,
+  nav.cantina-nav .btn:focus-visible{
+    outline:2px solid var(--cantina-primary);
+    outline-offset:2px;
+  }
+
+  /* ===== Mobile (<=640px): header estável, hambúrguer menor e dropdown ancorado ===== */
+  @media (max-width: 640px){
+    nav.cantina-nav .cantina-container{
+      height:72px;
+      position:relative;
+    }
+    nav.cantina-nav img{ height:48px; }
+    nav.cantina-nav .brand{
+      flex:1;
+      min-width:0;
+    }
+    nav.cantina-nav .menu-toggle{
+      display:inline-flex; align-items:center; justify-content:center;
+      width:40px; height:40px;
+      padding:6px; border-radius:10px;
+    }
+    nav.cantina-nav .menu-toggle svg{
+      width:18px; height:18px;
+    }
+    nav.cantina-nav .actions{
+      position:absolute; right:12px;
+      top:calc(100% + 8px); z-index:60;
+      display:none; flex-direction:column; gap:6px;
+      background:#ffffff; border:1px solid var(--cantina-border); border-radius:12px;
+      padding:10px; width:min(78vw, 280px);
+      box-shadow:0 12px 30px rgba(2,8,23,.18);
+    }
+    nav.cantina-nav .actions.open{ display:flex; }
+    nav.cantina-nav .actions .btn{ width:100%; justify-content:center; }
+  }
+
+  /* ===== Mini ajuste de tipografia do título para telas muito pequenas ===== */
+  @media (max-width: 400px){
+    nav.cantina-nav .brand .title{
+      font-size:clamp(16px, 5vw, 22px);
+    }
+  }
+  </style>
+</head>
+
+<body class="min-h-screen text-white antialiased" style="background: var(--cantina-secondary);">
+
+  <nav class="cantina-nav">
+    <div class="cantina-container">
+      <a class="brand" href="#">
+        <img src="https://iconecolegioecurso.com.br/wp-content/uploads/2022/08/xlogo_icone_site.png.pagespeed.ic_.QgXP3GszLC.webp"
+             alt="Logo Ícone Colégio e Curso"
+             onerror="this.onerror=null;this.src='https://placehold.co/150x50/eeeeee/333333?text=Logo';">
+        <span class="divider" aria-hidden="true"></span>
+        <span class="title text-[#FD7F08]">FORMULÁRIO DE COMPRAS</span>
+      </a>
+
+      <!-- Botão hambúrguer (aparece só no mobile via CSS) -->
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="menuActions">
+        <!-- Ícone corrigido: usa STROKE ao invés de FILL -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- Ações (dropdown no mobile; inline no desktop) -->
+      <div id="menuActions" class="actions">
+        <button id="btnAdmin" style="display:none" class="btn">Admin</button>
+        <button id="btnSair" class="btn">Sair</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Anchors ocultos para navegar por HREF -->
+  <a id="hrefLogin" href="../index.html" style="display:none;"></a>
+  <a id="hrefAdmin" href="../admin/index.html" style="display:none;"></a>
+
+  <!-- Main -->
+  <main class="w-full px-4 sm:px-6 pb-16 mt-6 sm:mt-8">
+    <div class="relative max-w-5xl mx-auto">
+
+      <!-- Aura decorativa -->
+      <div class="pointer-events-none absolute inset-0 -z-10 hidden sm:block blur-3xl opacity-30" aria-hidden="true">
+        <div class="w-56 h-56 lg:w-72 lg:h-72 bg-primaria/30 rounded-full absolute -top-10 -left-10"></div>
+        <div class="w-56 h-56 lg:w-72 lg:h-72 bg-orange-300/30 rounded-full absolute bottom-0 right-0"></div>
+      </div>
+
+      <form id="formulario" novalidate
+            class="mx-auto bg-[#F1663C] backdrop-blur-xl border border-white/60 shadow-2xl shadow-glow rounded-xl sm:rounded-2xl p-4 xs:p-6 sm:p-8 md:p-10 transition-[transform,box-shadow] hover:shadow-glow hover:-translate-y-0.5 max-w-3xl lg:max-w-4xl">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-10 gap-y-4">
+          <!-- COLUNA ESQUERDA -->
+          <div class="col-esq">
+            <label for="nome" class="font-semibold mb-1 block">Nome</label>
+            <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required
+                   class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none ring-0 focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition" />
+
+            <label for="email" class="font-semibold mb-1 block mt-2">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required
+                   class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none ring-0 focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition" />
+
+            <label for="unidade" class="font-semibold mb-1 block mt-2">Selecione a unidade</label>
+            <select id="unidade" name="unidade" required
+                    class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition">
+              <option value="">Escolha uma unidade</option>
+              <option value="1">Unidade 1</option>
+              <option value="2">Unidade 2</option>
+              <option value="3">Unidade 3</option>
+              <option value="4">Unidade 4</option>
+              <option value="5">Unidade 5</option>
+              <option value="6">Unidade 6</option>
+            </select>
+
+            <p class="font-semibold mt-2">Possui prazo?</p>
+            <div class="flex flex-wrap items-center gap-4 text-sm sm:text-base">
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <input type="radio" name="prazo" value="sim" class="accent-primaria"> <span>Sim</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <input type="radio" name="prazo" value="nao" checked class="accent-primaria"> <span>Não</span>
+              </label>
+            </div>
+
+            <div id="prazoCampos" class="hidden mt-2">
+              <label for="dataPrazo" class="font-semibold mb-1 block">Data e hora do prazo</label>
+              <input type="datetime-local" id="dataPrazo" name="dataPrazo"
+                     class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition" />
+            </div>
+
+            <label for="urgencia" class="font-semibold mb-1 block mt-2">Grau de urgência</label>
+            <select id="urgencia" name="urgencia" required
+                    class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition">
+              <option value="">Selecione o grau</option>
+              <option value="baixa">Baixa</option>
+              <option value="media">Média</option>
+              <option value="alta">Alta</option>
+              <option value="critica">Crítica</option>
+            </select>
+          </div>
+
+          <!-- COLUNA DIREITA -->
+          <div class="col-dir md:pl-6 md:border-l md:border-white/40">
+            <label for="tipo" class="font-semibold mb-1 block">Tipo</label>
+            <select id="tipo" name="tipo" required
+                    class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition">
+              <option value="">Selecione uma opção</option>
+              <option value="servico">Serviço</option>
+              <option value="produto">Produto</option>
+            </select>
+
+            <div id="servicoCampos" class="hidden mt-2">
+              <label for="descricaoServico" class="font-semibold mb-1 block">Descrição do serviço</label>
+              <textarea id="descricaoServico" name="descricaoServico" placeholder="Descreva o serviço a ser realizado"
+                        class="w-full min-h-[90px] rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition resize-y"></textarea>
+
+              <p class="font-semibold mt-2">Tem alguém para indicar?</p>
+              <div class="flex flex-wrap items-center gap-4 text-sm sm:text-base" id="temIndicacaoGroup">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="radio" name="temIndicacao" value="sim" class="accent-primaria"> <span>Sim</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="radio" name="temIndicacao" value="nao" checked class="accent-primaria"> <span>Não</span>
+                </label>
+              </div>
+
+              <div id="indicacaoQuem" class="hidden mt-2">
+                <label for="quemIndicar" class="font-semibold mb-1 block">Quem?</label>
+                <input type="text" id="quemIndicar" name="quemIndicar" placeholder="Nome e/ou contato da indicação"
+                       class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition" />
+              </div>
+            </div>
+
+            <div id="produtoCampos" class="hidden mt-2">
+              <label for="nomeProduto" class="font-semibold mb-1 block">Produto (nome)</label>
+              <input type="text" id="nomeProduto" name="nomeProduto" placeholder="Ex.: Caneca, Banner..."
+                     class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition" />
+
+              <label for="quantidadeProduto" class="font-semibold mb-1 block mt-2">Quantidade</label>
+              <input type="number" id="quantidadeProduto" name="quantidadeProduto" min="1" step="1" placeholder="Ex.: 100"
+                     class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition" />
+
+              <p class="font-semibold mt-2">Tem algum link?</p>
+              <div class="flex flex-wrap items-center gap-4 text-sm sm:text-base" id="temLinkGroup">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="radio" name="temLink" value="sim" class="accent-primaria"> <span>Sim</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="radio" name="temLink" value="nao" checked class="accent-primaria"> <span>Não</span>
+                </label>
+              </div>
+
+              <div id="linkCampos" class="hidden mt-2">
+                <div id="listaLinks" class="space-y-2"></div>
+                <button type="button" class="small-btn mt-2 inline-flex w-full xs:w-auto justify-center items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-semibold shadow hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 transition" id="adicionarLink">+ Adicionar outro link</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit"
+                class="group mt-6 w-full rounded-xl bg-white text-black font-semibold px-5 py-3 shadow-lg shadow-primaria/30 ring-0 outline-none transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:ring-4 focus-visible:ring-primaria/30">
+          <span class="inline-flex items-center gap-2 justify-center">Enviar
+            <svg class="size-5 transition-transform group-hover:translate-x-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.25 8.25L21 12l-3.75 3.75M21 12H3" /></svg>
+          </span>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Firebase Auth + Checagem de Admin -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAEZidq8mdAUKeJXvSQeE01gVOLWe_cp78",
+      authDomain: "compras-icone.firebaseapp.com",
+      projectId: "compras-icone",
+      storageBucket: "compras-icone.firebasestorage.app",
+      messagingSenderId: "831706842201",
+      appId: "1:831706842201:web:9b68ae4f98ad93c5a99d48",
+    };
+
+    const ALLOWED_DOMAIN = 'icone.g12.br';
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // === Lista fixa de admins ===
+    const ADMIN_EMAILS = new Set([
+      'samuel.colman@icone.g12.br',
+      'pedrolucas@icone.g12.br',
+      'filipemarques@icone.g12.br',
+    ].map(e => e.toLowerCase()));
+
+    const isAllowedEmail = (email) => email?.toLowerCase().endsWith('@' + ALLOWED_DOMAIN);
+
+    const inputNome   = document.getElementById('nome');
+    const inputEmail  = document.getElementById('email');
+    const btnSair     = document.getElementById('btnSair');
+    const btnAdmin    = document.getElementById('btnAdmin');
+
+    const hrefLogin   = document.getElementById('hrefLogin');
+    const hrefAdmin   = document.getElementById('hrefAdmin');
+
+    // ===== BOTÕES =====
+    btnSair?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        await signOut(auth);
+      } catch (err) {
+        console.error('Erro ao sair:', err);
+        alert('Erro ao sair. Tente novamente.');
+      } finally {
+        // Redireciona por HREF
+        if (hrefLogin) hrefLogin.click();
+        else location.href = 'login.html';
+      }
+    });
+
+    btnAdmin?.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Redireciona por HREF (abre na mesma aba)
+      if (hrefAdmin) hrefAdmin.click();
+      else location.href = '/admin/';
+    });
+
+    // ===== VERIFICAÇÃO DE LOGIN + ADMIN =====
+    onAuthStateChanged(auth, async (user) => {
+      if (!user || !isAllowedEmail(user.email)) {
+        try { await signOut(auth); } catch(e) {}
+        // Redireciona por HREF para /login/
+        if (hrefLogin) hrefLogin.click();
+        else location.href = 'login.html';
+        return;
+      }
+
+      // Preenche campos automáticos
+      inputEmail.value = user.email;
+      inputEmail.readOnly = true;
+      if (!inputNome.value) inputNome.value = user.displayName || '';
+
+      // Checa se o usuário é admin
+      const isAdmin = ADMIN_EMAILS.has(user.email.toLowerCase());
+      btnAdmin.style.display = isAdmin ? 'inline-flex' : 'none';
+    });
+  </script>
+
+  <!-- Lógica do formulário + envio para Google Sheets -->
+  <script>
+    const form = document.getElementById('formulario');
+
+    // Prazo
+    const radiosPrazo = document.getElementsByName('prazo');
+    const prazoCampos = document.getElementById('prazoCampos');
+    const inputDataPrazo = document.getElementById('dataPrazo');
+
+    // Tipo
+    const selectTipo = document.getElementById('tipo');
+
+    // Serviço
+    const servicoCampos = document.getElementById('servicoCampos');
+    const descricaoServico = document.getElementById('descricaoServico');
+    const temIndicacaoGroup = document.getElementById('temIndicacaoGroup');
+    const indicacaoQuem = document.getElementById('indicacaoQuem');
+    const quemIndicar = document.getElementById('quemIndicar');
+
+    // Produto
+    const produtoCampos = document.getElementById('produtoCampos');
+    const nomeProduto = document.getElementById('nomeProduto');
+    const quantidadeProduto = document.getElementById('quantidadeProduto');
+
+    // Links
+    const temLinkGroup = document.getElementById('temLinkGroup');
+    const linkCampos = document.getElementById('linkCampos');
+    const listaLinks = document.getElementById('listaLinks');
+    const btnAddLink = document.getElementById('adicionarLink');
+
+    let linkCount = 0;
+    const maxLinks = 3;
+
+    // trava anti duplo-clique
+    let isSubmitting = false;
+
+    // Toast helper
+    function toast(msg, type = 'info') {
+      const isSuccess = type === 'success';
+      const isError   = type === 'error';
+      Toastify({
+        text: msg,
+        duration: 3500,
+        close: true,
+        gravity: "top",
+        position: "right",
+        stopOnFocus: true,
+        style: {
+          background: isSuccess
+            ? "linear-gradient(90deg,#16a34a,#22c55e)"
+            : isError
+            ? "linear-gradient(90deg,#dc2626,#ef4444)"
+            : "linear-gradient(90deg,#334155,#64748b)",
+          color: "#ffffff",
+          fontWeight: "600",
+          boxShadow: "0 10px 25px -10px rgba(0,0,0,.35)",
+          borderRadius: "10px",
+          padding: "10px 16px",
+        },
+        offset: { x: 8, y: 10 },
+      }).showToast();
+    }
+
+    function atualizarBotaoAddLink() {
+      if (!btnAddLink) return;
+      btnAddLink.style.display = linkCount >= maxLinks ? "none" : "inline-flex";
+    }
+
+    function criarCampoLink() {
+      linkCount++;
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-2';
+
+      if (linkCount === 1) {
+        div.innerHTML = `<input type="url" name="linkProduto${linkCount}" placeholder="Cole o link ${linkCount}" required class="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition"/>`;
+      } else {
+        div.innerHTML = `
+          <input type="url" name="linkProduto${linkCount}" placeholder="Cole o link ${linkCount}" required class="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm sm:text-base outline-none focus:border-primaria focus:ring-4 focus:ring-primaria/20 transition"/>
+          <button type="button" class="grid place-items-center rounded-full w-7 h-7 bg-white text-primaria border border-primaria/30 shadow hover:scale-105 active:scale-100 transition remove-link" aria-label="Remover link">&times;</button>
+        `;
+        div.querySelector('.remove-link').addEventListener('click', () => {
+          div.remove();
+          linkCount--;
+          atualizarBotaoAddLink();
+          atualizarPlaceholders();
+        });
+      }
+      listaLinks.appendChild(div);
+      atualizarBotaoAddLink();
+    }
+
+    function atualizarPlaceholders() {
+      const inputs = listaLinks.querySelectorAll('input[type="url"]');
+      inputs.forEach((input, index) => input.placeholder = `Cole o link ${index + 1}`);
+    }
+
+    btnAddLink?.addEventListener('click', () => {
+      if (linkCount < maxLinks) {
+        criarCampoLink();
+        atualizarPlaceholders();
+      }
+    });
+
+    function atualizarPrazo(){
+      const selecionado = [...radiosPrazo].find(r=>r.checked)?.value;
+      if(selecionado==='sim'){
+        prazoCampos.classList.remove('hidden');
+        inputDataPrazo.required = true;
+      }else{
+        prazoCampos.classList.add('hidden');
+        inputDataPrazo.required = false;
+        inputDataPrazo.value = '';
+      }
+    }
+    radiosPrazo.forEach(r=>r.addEventListener('change', atualizarPrazo));
+    atualizarPrazo();
+
+    function atualizarTipo(){
+      if(selectTipo.value==='servico'){
+        servicoCampos.classList.remove('hidden');
+        descricaoServico.required = true;
+
+        produtoCampos.classList.add('hidden');
+        nomeProduto.required = false; nomeProduto.value='';
+        quantidadeProduto.required = false; quantidadeProduto.value='';
+        document.querySelector('input[name="temLink"][value="nao"]').checked = true;
+        linkCampos.classList.add('hidden');
+        listaLinks.innerHTML=''; linkCount=0; atualizarBotaoAddLink();
+
+      }else if(selectTipo.value==='produto'){
+        produtoCampos.classList.remove('hidden');
+        nomeProduto.required = true;
+        quantidadeProduto.required = true;
+
+        servicoCampos.classList.add('hidden');
+        descricaoServico.required = false; descricaoServico.value='';
+        document.querySelector('input[name="temIndicacao"][value="nao"]').checked = true;
+        indicacaoQuem.classList.add('hidden');
+        quemIndicar.required = false; quemIndicar.value='';
+
+      }else{
+        servicoCampos.classList.add('hidden');
+        produtoCampos.classList.add('hidden');
+      }
+    }
+    selectTipo.addEventListener('change', atualizarTipo);
+    atualizarTipo();
+
+    function atualizarIndicacao(){
+      const temIndicacao = document.querySelector('input[name="temIndicacao"]:checked')?.value;
+      if(temIndicacao==='sim'){
+        indicacaoQuem.classList.remove('hidden');
+        quemIndicar.required = false; // mude para true se quiser exigir
+      }else{
+        indicacaoQuem.classList.add('hidden');
+        quemIndicar.required = false;
+        quemIndicar.value = '';
+      }
+    }
+    temIndicacaoGroup.addEventListener('change', atualizarIndicacao);
+
+    function atualizarLink(){
+      const temLink = document.querySelector('input[name="temLink"]:checked')?.value;
+      if(temLink==='sim'){
+        linkCampos.classList.remove('hidden');
+        if(linkCount===0) criarCampoLink();
+      }else{
+        linkCampos.classList.add('hidden');
+        listaLinks.innerHTML='';
+        linkCount=0;
+        atualizarBotaoAddLink();
+      }
+    }
+    temLinkGroup.addEventListener('change', atualizarLink);
+
+    // ======== INTEGRAÇÃO COM GOOGLE SHEETS (Apps Script) ========
+    const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbym9i89FlX-rtpoeiEasIPVaOXIs2glkPTMNXWVu1U5jmfdbkYXMM2t-0ylPnllaJfh/exec';
+
+    function coletarLinks() {
+      const inputs = listaLinks.querySelectorAll('input[type="url"]');
+      const arr = [];
+      inputs.forEach(i => {
+        const v = i.value.trim();
+        if (v) arr.push(v);
+      });
+      return arr;
+    }
+
+    function desabilitarBotao(submitBtn, desabilitar) {
+      if (!submitBtn) return;
+      submitBtn.disabled = desabilitar;
+      submitBtn.style.opacity = desabilitar ? '0.7' : '1';
+      submitBtn.style.cursor  = desabilitar ? 'not-allowed' : 'pointer';
+    }
+
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+
+      if (isSubmitting) return; // trava dupla submissão
+      isSubmitting = true;
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const unidade = document.getElementById('unidade').value;
+      const urgencia = document.getElementById('urgencia').value;
+      const prazoSelecionado = [...radiosPrazo].find(r=>r.checked)?.value;
+      const dataPrazo = inputDataPrazo.value;
+      const tipo = selectTipo.value;
+
+      // Validações
+      if(!nome || !email || !unidade || !urgencia || !tipo){
+        toast('Preencha todos os campos obrigatórios.', 'error'); isSubmitting=false; return;
+      }
+      if(prazoSelecionado==='sim' && !dataPrazo){
+        toast('Por favor, selecione a data e hora do prazo.', 'error'); isSubmitting=false; return;
+      }
+      if(tipo==='servico' && !descricaoServico.value.trim()){
+        toast('Descreva o serviço.', 'error'); isSubmitting=false; return;
+      }
+      if(tipo==='produto'){
+        if(!nomeProduto.value.trim()){
+          toast('Informe o nome do produto.', 'error'); isSubmitting=false; return;
+        }
+        if(!quantidadeProduto.value || Number(quantidadeProduto.value) < 1){
+          toast('Informe a quantidade (mínimo 1).', 'error'); isSubmitting=false; return;
+        }
+      }
+
+      const payload = {
+        nome,
+        email,
+        unidade,
+        prazo: prazoSelecionado,
+        dataPrazo, // "YYYY-MM-DDTHH:mm"
+        urgencia,
+        tipo,
+        descricaoServico: (tipo==='servico') ? (descricaoServico.value.trim() || '') : '',
+        temIndicacao: (tipo==='servico') ? (document.querySelector('input[name="temIndicacao"]:checked')?.value || 'nao') : '',
+        quemIndicar: (tipo==='servico') ? (quemIndicar.value.trim() || '') : '',
+        nomeProduto: (tipo==='produto') ? (nomeProduto.value.trim() || '') : '',
+        quantidadeProduto: (tipo==='produto') ? (quantidadeProduto.value || '') : '',
+        links: (tipo==='produto' && document.querySelector('input[name="temLink"]:checked')?.value === 'sim')
+          ? JSON.stringify(coletarLinks())
+          : JSON.stringify([])
+      };
+
+      // ID único por envio (idempotência no servidor)
+      payload.submissionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+
+      const body = new URLSearchParams(payload);
+
+      try {
+        desabilitarBotao(submitBtn, true);
+
+        let ok = false;
+        let parseOk = false;
+
+        try {
+          const resp = await fetch(WEBAPP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body
+          });
+
+          // Se a resposta for opaqua (ex.: por CORS), considere sucesso
+          if (resp.type === 'opaque') {
+            ok = true;
+          } else {
+            let data = null;
+            try { data = await resp.json(); parseOk = true; } catch (_){}
+            ok = resp.ok && (parseOk ? (data?.ok !== false) : true);
+          }
+        } catch (networkErr) {
+          // Fallback só em erro de rede real
+          try {
+            await fetch(WEBAPP_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+              body
+            });
+            ok = true;
+          } catch (_) {
+            ok = false;
+          }
+        }
+
+        if (!ok) throw new Error('Falha ao enviar');
+
+        // Sucesso
+        toast('Pedido enviado com sucesso!', 'success');
+
+        // Reset UI
+        form.reset();
+        linkCount = 0; listaLinks.innerHTML = ''; atualizarBotaoAddLink();
+        document.querySelector('input[name="prazo"][value="nao"]').checked = true;
+        document.querySelector('input[name="temIndicacao"][value="nao"]').checked = true;
+        document.querySelector('input[name="temLink"][value="nao"]').checked = true;
+        atualizarPrazo(); atualizarTipo(); atualizarIndicacao(); atualizarLink();
+
+      } catch (err) {
+        console.error(err);
+        toast(`Erro ao enviar: ${err.message || err}`, 'error');
+      } finally {
+        desabilitarBotao(submitBtn, false);
+        isSubmitting = false;
+      }
+    });
+
+    // Toggle do menu mobile
+    (function(){
+      const menuToggle = document.getElementById('menuToggle');
+      const menuActions = document.getElementById('menuActions');
+
+      if(menuToggle && menuActions){
+        menuToggle.addEventListener('click', () => {
+          const isOpen = menuActions.classList.toggle('open');
+          menuToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        // fecha ao clicar fora
+        document.addEventListener('click', (e) => {
+          if(!menuActions.classList.contains('open')) return;
+          const clickedInside = menuActions.contains(e.target) || menuToggle.contains(e.target);
+          if(!clickedInside){
+            menuActions.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        // garante que ao voltar para desktop o menu feche
+        window.addEventListener('resize', () => {
+          if(window.innerWidth > 640 && menuActions.classList.contains('open')){
+            menuActions.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
